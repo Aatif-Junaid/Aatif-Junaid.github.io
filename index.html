@@ -406,14 +406,16 @@
       var items = timeline.querySelectorAll('.tl-item');
       var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      var dpr = 1, cssW = 70, cssH = 0, baseX = 30;
+      var dpr = 1, cssW = 132, cssH = 0, baseX = 60;
       var head = { x: baseX, y: 0 }, targetY = 0, prevY = 0;
       var parts = [], running = false, t0 = performance.now();
 
       function resize() {
         dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-        cssW = canvas.clientWidth || 70;
-        cssH = canvas.clientHeight || timeline.offsetHeight;   // spans the list via top/bottom:0
+        cssW = 132;
+        cssH = timeline.offsetHeight;            // list height (canvas is absolute, no feedback)
+        canvas.style.width = cssW + 'px';
+        canvas.style.height = cssH + 'px';
         canvas.width = Math.round(cssW * dpr);
         canvas.height = Math.round(cssH * dpr);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -435,7 +437,7 @@
         parts.push({
           x: x + (Math.random() - 0.5) * 5, y: y + (Math.random() - 0.5) * 5,
           vx: (Math.random() - 0.5) * 1.0, vy: -(0.3 + Math.random() * 1.1) - speed * 0.05,
-          life: 1, decay: 0.010 + Math.random() * 0.018, size: 1.2 + Math.random() * 2.6
+          life: 1, decay: 0.009 + Math.random() * 0.016, size: 1.7 + Math.random() * 3.3
         });
       }
       function streak(ang, len, w, a) {
@@ -455,45 +457,45 @@
         computeTarget();
         head.y += (targetY - head.y) * 0.12;                 // eased gravity weight
         var speed = Math.abs(head.y - prevY); prevY = head.y;
-        head.x = baseX + Math.sin(head.y * 0.02 + time * 0.8) * 10;   // weave around the path
+        head.x = baseX + Math.sin(head.y * 0.02 + time * 0.8) * 14;   // weave around the path
         litNodes(head.y);
 
-        var emit = Math.min(6, 1 + Math.floor(speed * 0.8));
+        var emit = Math.min(7, 2 + Math.floor(speed * 0.9));
         for (var e = 0; e < emit; e++) spawnOne(head.x, head.y, speed);
 
         ctx.clearRect(0, 0, cssW, cssH);
 
         // faint dotted path the comet weaves around
-        ctx.fillStyle = 'rgba(47, 127, 179, 0.08)';
-        for (var yy = 6; yy < cssH; yy += 15) { ctx.beginPath(); ctx.arc(baseX, yy, 1.1, 0, 6.2832); ctx.fill(); }
+        ctx.fillStyle = 'rgba(47, 127, 179, 0.10)';
+        for (var yy = 6; yy < cssH; yy += 15) { ctx.beginPath(); ctx.arc(baseX, yy, 1.2, 0, 6.2832); ctx.fill(); }
 
         // tail: dense near core, dissipating into distinct fragments upward
         for (var i = parts.length - 1; i >= 0; i--) {
           var p = parts[i];
           p.x += p.vx; p.y += p.vy; p.vx *= 0.94; p.vy *= 0.94; p.life -= p.decay;
           if (p.life <= 0) { parts.splice(i, 1); continue; }
-          var r = Math.max(0.1, p.size * p.life) * 2.1;
+          var r = Math.max(0.1, p.size * p.life) * 2.4;
           var pg = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
-          pg.addColorStop(0, 'rgba(185, 232, 255, ' + (p.life * 0.8) + ')');
-          pg.addColorStop(1, 'rgba(120, 200, 245, 0)');
+          pg.addColorStop(0, 'rgba(140, 210, 250, ' + (p.life * 0.9) + ')');
+          pg.addColorStop(1, 'rgba(80, 175, 235, 0)');
           ctx.fillStyle = pg; ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 6.2832); ctx.fill();
         }
 
         // flares pulling upward and outward (atmospheric friction)
         ctx.save(); ctx.translate(head.x, head.y);
-        var sp = Math.min(1, speed * 0.18);
-        streak(-Math.PI / 2, 30 + sp * 46, 6, 0.5 * (0.6 + 0.4 * Math.sin(time * 7)));
-        streak(-Math.PI / 2 - 0.5, 18 + sp * 26, 4, 0.3 * (0.5 + 0.5 * Math.sin(time * 9 + 1)));
-        streak(-Math.PI / 2 + 0.5, 18 + sp * 26, 4, 0.3 * (0.5 + 0.5 * Math.sin(time * 8 + 2)));
+        var sp = Math.min(1, speed * 0.2);
+        streak(-Math.PI / 2, 42 + sp * 60, 9, 0.6 * (0.6 + 0.4 * Math.sin(time * 7)));
+        streak(-Math.PI / 2 - 0.5, 26 + sp * 34, 6, 0.42 * (0.5 + 0.5 * Math.sin(time * 9 + 1)));
+        streak(-Math.PI / 2 + 0.5, 26 + sp * 34, 6, 0.42 * (0.5 + 0.5 * Math.sin(time * 8 + 2)));
         ctx.restore();
 
         // volumetric, vertically elongated body + pulsing core
-        ctx.save(); ctx.translate(head.x, head.y); ctx.scale(1, 1.7);
-        layer(38, 'rgba(120, 195, 240, 0.18)', 'rgba(120, 195, 240, 0)');
-        layer(22, 'rgba(120, 200, 245, 0.30)', 'rgba(120, 200, 245, 0)');
-        layer(12, 'rgba(175, 228, 255, 0.55)', 'rgba(120, 200, 245, 0)');
-        var pulse = 0.78 + 0.22 * Math.sin(time * 4.5);
-        layer(5.5, 'rgba(242, 253, 255, ' + pulse + ')', 'rgba(170, 230, 255, 0)');
+        ctx.save(); ctx.translate(head.x, head.y); ctx.scale(1, 1.8);
+        layer(56, 'rgba(70, 165, 228, 0.22)', 'rgba(70, 165, 228, 0)');
+        layer(34, 'rgba(85, 180, 238, 0.42)', 'rgba(85, 180, 238, 0)');
+        layer(18, 'rgba(150, 220, 255, 0.64)', 'rgba(110, 200, 248, 0)');
+        var pulse = 0.85 + 0.15 * Math.sin(time * 4.5);
+        layer(8, 'rgba(245, 254, 255, ' + pulse + ')', 'rgba(170, 230, 255, 0)');
         ctx.restore();
 
         if (running) requestAnimationFrame(frame);
