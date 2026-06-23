@@ -53,7 +53,7 @@
     <section class="hero">
       <p class="kicker reveal">Product Marketing and GTM | San Francisco</p>
       <h1 class="hero__name reveal">Aatif Junaid Mulla</h1>
-      <p class="hero__tagline reveal">Pipeline and product &middot; GTM strategy &middot; AI and B2B SaaS</p>
+      <p class="hero__tagline reveal">Revenue and product marketing &middot; GTM strategy &middot; AI and Agent Tech</p>
       <p class="hero__statement reveal">
         Most product marketers own the message. Most growth teams own acquisition. I own the GTM motion
         end to end: positioning to pipeline to revenue, <strong>and I have the numbers to prove it.</strong>
@@ -74,7 +74,7 @@
       </div>
 
       <div class="timeline">
-        <span class="timeline__beam" aria-hidden="true"><span class="timeline__orb"></span></span>
+        <canvas class="tl-comet" aria-hidden="true"></canvas>
         <ol class="timeline__list">
 
         <!-- Aiseberg / Aisepedia -->
@@ -395,29 +395,110 @@
     // Footer year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Scroll-driven timeline beam: the orb travels down, the trail fills,
-    // and each role lights up as the orb reaches it.
+    // Gravity-driven particle comet that tracks scroll down the timeline.
+    // Canvas-based: eased "weighted" vertical motion, organic sine wobble,
+    // and a fragment emission system that drifts and fades behind the head.
     (function () {
       var timeline = document.querySelector('.timeline');
-      if (!timeline) return;
+      var canvas = document.querySelector('.tl-comet');
+      if (!timeline || !canvas) return;
+      var ctx = canvas.getContext('2d');
       var items = timeline.querySelectorAll('.tl-item');
-      var ticking = false;
-      function update() {
+      var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      var dpr = 1, cssW = 70, cssH = 0;
+      var baseX = 30;                 // rail center within the canvas
+      var head = { x: baseX, y: 0 }, targetY = 0, prevY = 0;
+      var parts = [], running = false, t0 = performance.now();
+
+      function resize() {
+        dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+        cssH = timeline.offsetHeight;
+        canvas.style.width = cssW + 'px';
+        canvas.style.height = cssH + 'px';
+        canvas.width = Math.round(cssW * dpr);
+        canvas.height = Math.round(cssH * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      function computeTarget() {
         var rect = timeline.getBoundingClientRect();
         var vh = window.innerHeight || document.documentElement.clientHeight;
-        var fill = Math.max(0, Math.min(timeline.offsetHeight, vh * 0.55 - rect.top));
-        timeline.style.setProperty('--tl-fill', fill + 'px');
+        targetY = Math.max(0, Math.min(cssH, vh * 0.5 - rect.top));
+      }
+      function litNodes(y) {
         items.forEach(function (it) {
           var dot = it.querySelector('.tl-dot');
           var center = it.offsetTop + (dot ? dot.offsetTop + dot.offsetHeight / 2 : 0);
-          it.classList.toggle('lit', fill >= center);
+          it.classList.toggle('lit', y >= center);
         });
-        ticking = false;
       }
-      function onScroll() { if (!ticking) { requestAnimationFrame(update); ticking = true; } }
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll);
-      update();
+      function spawn(x, y, speed) {
+        var n = Math.min(4, 1 + Math.floor(speed * 0.7));
+        for (var i = 0; i < n; i++) {
+          parts.push({
+            x: x + (Math.random() - 0.5) * 4, y: y + (Math.random() - 0.5) * 4,
+            vx: (Math.random() - 0.5) * 0.9, vy: -(0.2 + Math.random() * 0.9),
+            life: 1, decay: 0.012 + Math.random() * 0.02, size: 1.4 + Math.random() * 2.4
+          });
+        }
+      }
+      function frame(now) {
+        var time = (now - t0) / 1000;
+        computeTarget();
+        head.y += (targetY - head.y) * 0.12;            // eased "weight" / gravity pull
+        var speed = Math.abs(head.y - prevY); prevY = head.y;
+        head.x = baseX + Math.sin(head.y * 0.018 + time * 1.2) * 9;  // organic wobble
+        litNodes(head.y);
+        if (speed > 0.05) spawn(head.x, head.y, speed);
+
+        ctx.clearRect(0, 0, cssW, cssH);
+        // fragment trail (atmospheric drag)
+        for (var i = parts.length - 1; i >= 0; i--) {
+          var p = parts[i];
+          p.x += p.vx; p.y += p.vy; p.vx *= 0.93; p.vy *= 0.93; p.life -= p.decay;
+          if (p.life <= 0) { parts.splice(i, 1); continue; }
+          ctx.globalAlpha = p.life * 0.7;
+          ctx.fillStyle = 'rgba(150, 210, 245, 1)';
+          ctx.shadowBlur = 8; ctx.shadowColor = 'rgba(120, 195, 245, 0.9)';
+          ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(0.1, p.size * p.life), 0, 6.2832); ctx.fill();
+        }
+        ctx.globalAlpha = 1; ctx.shadowBlur = 0;
+        // comet aura + core
+        var gx = head.x, gy = head.y, g;
+        g = ctx.createRadialGradient(gx, gy, 0, gx, gy, 34);
+        g.addColorStop(0, 'rgba(143, 205, 238, 0.34)'); g.addColorStop(1, 'rgba(143, 205, 238, 0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(gx, gy, 34, 0, 6.2832); ctx.fill();
+        g = ctx.createRadialGradient(gx, gy, 0, gx, gy, 14);
+        g.addColorStop(0, 'rgba(90, 180, 240, 0.7)'); g.addColorStop(1, 'rgba(90, 180, 240, 0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(gx, gy, 14, 0, 6.2832); ctx.fill();
+        ctx.shadowBlur = 16; ctx.shadowColor = 'rgba(120, 200, 255, 0.95)';
+        g = ctx.createRadialGradient(gx, gy, 0, gx, gy, 5);
+        g.addColorStop(0, 'rgba(236, 250, 255, 1)'); g.addColorStop(0.5, 'rgba(120, 205, 255, 1)'); g.addColorStop(1, 'rgba(47, 127, 179, 0.9)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(gx, gy, 5, 0, 6.2832); ctx.fill();
+        ctx.shadowBlur = 0;
+
+        if (running) requestAnimationFrame(frame);
+      }
+      function start() { if (!running) { running = true; requestAnimationFrame(frame); } }
+      function stop() { running = false; }
+
+      resize();
+      window.addEventListener('resize', resize);
+      window.addEventListener('load', resize);
+      window.__comet = function () { return { y: Math.round(head.y), target: Math.round(targetY), parts: parts.length, h: cssH }; };
+
+      if (prefersReduced) {
+        canvas.style.display = 'none';
+        function simple() { computeTarget(); litNodes(targetY); }
+        window.addEventListener('scroll', simple, { passive: true });
+        simple();
+        return;
+      }
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (e) {
+          e.forEach(function (en) { en.isIntersecting ? start() : stop(); });
+        }, { threshold: 0 }).observe(timeline);
+      } else { start(); }
     })();
 
     // Smooth scroll for in-page nav links

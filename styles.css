@@ -1,25 +1,25 @@
 /* =========================================================
    Aatif Junaid Mulla — personal site
    Bright paper, Apple Liquid Glass tiles, sky-blue accents,
-   Playfair + Inter, subtle motion and tiny metric animations.
+   Playfair + Inter, particle-comet timeline, tiny metric anims.
    ========================================================= */
 
 :root {
-  --paper: #EEEDE8;          /* ~5% darker than before, still bright */
+  --paper: #EEEDE8;
   --paper-2: #E7E3DA;
-  --ink: #26241f;            /* warm charcoal */
+  --ink: #26241f;
   --ink-soft: #6b655b;
 
-  --blue: #2f7fb3;           /* readable primary blue */
-  --blue-deep: #1f5575;      /* deeper, for the name and accents */
-  --sky: #8fcdee;            /* sky blue, for glows and highlights */
-  --sky-deep: #4f9fd4;       /* darker sky blue */
+  --blue: #2f7fb3;
+  --blue-deep: #1f5575;
+  --sky: #8fcdee;
+  --sky-deep: #4f9fd4;
   --sky-bright: #cdebfb;
+  --navy: #1f2c49;           /* single toolkit navy */
 
   --line: rgba(38, 36, 31, 0.09);
   --line-strong: rgba(38, 36, 31, 0.16);
 
-  /* liquid glass (more opaque for readability, no hazy sheen) */
   --tile-bg: rgba(255, 255, 255, 0.62);
   --tile-bg-hover: rgba(255, 255, 255, 0.78);
   --tile-border: rgba(255, 255, 255, 0.85);
@@ -48,7 +48,7 @@ ul, ol { padding: 0; list-style: none; }
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
 
-/* soft drifting color field (mostly sky + light), bright and airy */
+/* soft drifting color field */
 body::before {
   content: ""; position: fixed; inset: -25vmax; z-index: -1;
   background:
@@ -100,27 +100,19 @@ body::before {
 
 /* ---------- hero ---------- */
 .hero { max-width: var(--maxw); margin: 0 auto; padding-top: clamp(3.5rem, 9vw, 7rem); padding-bottom: clamp(2.5rem, 6vw, 4.5rem); }
-.kicker {
-  font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--blue-deep); font-weight: 600; margin-bottom: 1.1rem;
-}
+.kicker { font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue-deep); font-weight: 600; margin-bottom: 1.1rem; }
 .hero__name {
   font-family: var(--serif); font-weight: 700;
-  font-size: clamp(3rem, 9vw, 6.2rem);
-  line-height: 1.12;                 /* room so the J descender is never clipped */
-  letter-spacing: -0.01em;
-  padding-bottom: 0.1em;             /* extra safety for descenders */
+  font-size: clamp(3rem, 9vw, 6.2rem); line-height: 1.12; letter-spacing: -0.01em; padding-bottom: 0.1em;
   background: linear-gradient(110deg, var(--blue-deep) 0%, var(--blue) 42%, var(--sky-deep) 72%, var(--blue) 100%);
-  background-size: 220% auto;
-  -webkit-background-clip: text; background-clip: text; color: transparent;
+  background-size: 220% auto; -webkit-background-clip: text; background-clip: text; color: transparent;
   animation: shimmer 9s ease-in-out infinite;
 }
 @keyframes shimmer { 0% { background-position: 0% center; } 50% { background-position: 100% center; } 100% { background-position: 0% center; } }
 .hero__tagline { font-size: clamp(0.95rem, 2.2vw, 1.15rem); font-weight: 600; color: var(--ink); margin-bottom: 1.6rem; }
 .hero__statement {
   font-family: var(--serif); font-weight: 500; font-style: italic;
-  font-size: clamp(1.4rem, 3.4vw, 2.25rem); line-height: 1.28; color: var(--ink);
-  max-width: 30ch; margin-bottom: 2.2rem;
+  font-size: clamp(1.4rem, 3.4vw, 2.25rem); line-height: 1.28; color: var(--ink); max-width: 30ch; margin-bottom: 2.2rem;
 }
 .hero__statement strong { font-style: normal; font-weight: 700; color: var(--blue-deep); }
 
@@ -143,7 +135,7 @@ body::before {
 .eyebrow { display: block; font-size: 0.76rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; color: var(--blue-deep); margin-bottom: 0.7rem; }
 .section-title { font-family: var(--serif); font-weight: 600; font-size: clamp(1.9rem, 4.4vw, 3rem); line-height: 1.12; letter-spacing: -0.01em; max-width: 24ch; }
 
-/* ---------- shared logo chip (no monogram, logos always load locally) ---------- */
+/* ---------- shared logo chip ---------- */
 .logo-chip {
   flex: 0 0 auto; height: 50px; min-width: 50px; width: auto; border-radius: 13px;
   background: #fff; border: 1px solid var(--line); overflow: hidden; display: inline-flex; align-items: center; justify-content: center;
@@ -153,36 +145,21 @@ body::before {
 .logo-chip--dark { background: #23262e; border-color: #23262e; }
 a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 22px rgba(40, 110, 160, 0.28); }
 
-/* ---------- experience timeline: scroll-driven beam ---------- */
+/* ---------- experience timeline: particle comet ---------- */
 .timeline { position: relative; padding-left: 0; }
-/* faint full track */
+/* faint guide track (subtle, never dominant) */
 .timeline::before {
   content: ""; position: absolute; left: 11px; top: 8px; bottom: 8px; width: 2px;
-  background: var(--line-strong); opacity: 0.5; border-radius: 2px;
+  background: var(--line-strong); opacity: 0.35; border-radius: 2px;
 }
-/* the glowing trail that fills with scroll */
-.timeline__beam {
-  position: absolute; left: 9px; top: 8px; width: 6px; height: var(--tl-fill, 0px);
-  max-height: calc(100% - 16px); border-radius: 6px;
-  background: linear-gradient(to bottom, var(--sky-bright), var(--sky) 30%, var(--blue));
-  box-shadow: 0 0 14px rgba(47, 127, 179, 0.5); will-change: height;
-}
-/* the comet orb riding the leading edge */
-.timeline__orb {
-  position: absolute; left: 50%; bottom: -5px; transform: translateX(-50%);
-  width: 16px; height: 16px; border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff, var(--sky) 55%, var(--blue));
-  box-shadow: 0 0 16px 5px rgba(143, 205, 238, 0.75); animation: orbPulse 2.4s ease-in-out infinite;
-}
-@keyframes orbPulse {
-  0%, 100% { box-shadow: 0 0 13px 4px rgba(143, 205, 238, 0.6); }
-  50% { box-shadow: 0 0 22px 8px rgba(143, 205, 238, 0.95); }
-}
-.timeline__list { position: relative; margin: 0; padding: 0; }
+/* canvas where the comet + fragments are drawn; sits behind the cards */
+.tl-comet { position: absolute; left: -18px; top: 0; pointer-events: none; z-index: 0; }
+.timeline__list { position: relative; z-index: 1; margin: 0; padding: 0; }
+
 .tl-item { position: relative; padding-left: 48px; margin-bottom: 1.4rem; }
 .tl-item:last-child { margin-bottom: 0; }
 .tl-dot {
-  position: absolute; left: 4px; top: 30px; width: 16px; height: 16px; border-radius: 50%; z-index: 1;
+  position: absolute; left: 4px; top: 30px; width: 16px; height: 16px; border-radius: 50%; z-index: 2;
   background: var(--paper); border: 2px solid var(--line-strong);
   transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
 }
@@ -219,7 +196,7 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 .metric__num { display: block; font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1; font-weight: 600; color: var(--blue-deep); margin-bottom: 0.35rem; padding-right: 1.6rem; }
 .metric__label { font-size: 0.7rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-soft); line-height: 1.3; }
 
-/* design-partner quote (social proof) */
+/* design-partner quote */
 .quote { margin: 1.5rem 0 0; padding: 1.2rem 1.5rem; background: rgba(47, 127, 179, 0.08); border-left: 3px solid var(--blue); border-radius: 0 14px 14px 0; }
 .quote__text { font-family: var(--serif); font-style: italic; font-size: clamp(1.1rem, 2.4vw, 1.4rem); line-height: 1.34; margin-bottom: 0.8rem; }
 .quote__cite { display: flex; flex-direction: column; gap: 0.1rem; }
@@ -235,24 +212,19 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 .edu-card__school { font-size: 0.86rem; color: var(--ink-soft); margin-top: 0.3rem; }
 .edu-card__note { color: var(--ink-soft); font-size: 0.95rem; }
 
+/* ---------- toolkit: standardized single navy ---------- */
 .tools-tile { padding: 1.8rem; }
 .tools-tile .eyebrow { margin-bottom: 1.4rem; }
 .tool-groups { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
 .tool-group {
-  --tg: var(--blue);
-  background: color-mix(in srgb, var(--tg) 8%, rgba(255, 255, 255, 0.55));
-  border: 1px solid var(--line); border-top: 3px solid var(--tg);
-  border-radius: 14px; padding: 1rem 1.05rem;
+  background: var(--navy); border: 1px solid rgba(255, 255, 255, 0.08); border-top: 3px solid var(--sky-deep);
+  border-radius: 14px; padding: 1.05rem 1.1rem;
 }
-.tool-group:nth-child(1) { --tg: #2f7fb3; }
-.tool-group:nth-child(2) { --tg: #2fa39b; }
-.tool-group:nth-child(3) { --tg: #7a5cc0; }
-.tool-group:nth-child(4) { --tg: #c08a2f; }
-.tool-group__name { display: flex; align-items: center; gap: 0.45rem; font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tg); font-weight: 700; margin-bottom: 0.8rem; }
-.tool-group__name::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--tg); flex: 0 0 auto; }
+.tool-group__name { display: flex; align-items: center; gap: 0.45rem; font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--sky-bright); font-weight: 700; margin-bottom: 0.85rem; }
+.tool-group__name::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--sky-deep); flex: 0 0 auto; }
 .tools { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-.tools li { font-size: 0.78rem; font-weight: 500; color: var(--ink); background: rgba(255, 255, 255, 0.72); border: 1px solid var(--line); border-radius: 999px; padding: 0.32rem 0.7rem; transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease; }
-.tools li:hover { border-color: var(--tg); color: var(--tg); transform: translateY(-1px); }
+.tools li { font-size: 0.78rem; font-weight: 500; color: #dceaf6; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 999px; padding: 0.32rem 0.7rem; transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease, transform 0.2s ease; }
+.tools li:hover { border-color: var(--sky); color: #fff; background: rgba(143, 205, 238, 0.22); transform: translateY(-1px); }
 
 /* ---------- work / what I build ---------- */
 .sample-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-bottom: 1.8rem; }
@@ -332,7 +304,6 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
   html { scroll-behavior: auto; }
   body::before { animation: none; }
   .hero__name { animation: none; }
-  .timeline__orb { animation: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .tile:hover, .btn:hover, .metric:hover, .tools li:hover, a.logo-chip:hover, .footer-linkedin:hover { transform: none; }
   .metric .mi { opacity: 0.92; animation: none !important; }
