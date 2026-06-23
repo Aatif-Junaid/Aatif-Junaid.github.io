@@ -395,9 +395,9 @@
     // Footer year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Gravity-driven particle comet that tracks scroll down the timeline.
-    // Canvas-based: eased "weighted" vertical motion, organic sine wobble,
-    // and a fragment emission system that drifts and fades behind the head.
+    // Gravity-driven particle comet, anchored to the experience list so its
+    // travel maps exactly to the list height (no stale canvas size). Volumetric
+    // elongated body, pulsing core, upward flares, and a dissipating tail.
     (function () {
       var timeline = document.querySelector('.timeline');
       var canvas = document.querySelector('.tl-comet');
@@ -406,16 +406,14 @@
       var items = timeline.querySelectorAll('.tl-item');
       var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      var dpr = 1, cssW = 70, cssH = 0;
-      var baseX = 30;                 // rail center within the canvas
+      var dpr = 1, cssW = 70, cssH = 0, baseX = 30;
       var head = { x: baseX, y: 0 }, targetY = 0, prevY = 0;
       var parts = [], running = false, t0 = performance.now();
 
       function resize() {
         dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-        cssH = timeline.offsetHeight;
-        canvas.style.width = cssW + 'px';
-        canvas.style.height = cssH + 'px';
+        cssW = canvas.clientWidth || 70;
+        cssH = canvas.clientHeight || timeline.offsetHeight;   // spans the list via top/bottom:0
         canvas.width = Math.round(cssW * dpr);
         canvas.height = Math.round(cssH * dpr);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -428,54 +426,75 @@
       function litNodes(y) {
         items.forEach(function (it) {
           var dot = it.querySelector('.tl-dot');
-          var center = it.offsetTop + (dot ? dot.offsetTop + dot.offsetHeight / 2 : 0);
-          it.classList.toggle('lit', y >= center);
+          var c = it.offsetTop + (dot ? dot.offsetTop + dot.offsetHeight / 2 : 0);
+          it.classList.toggle('lit', y >= c);
         });
       }
-      function spawn(x, y, speed) {
-        var n = Math.min(4, 1 + Math.floor(speed * 0.7));
-        for (var i = 0; i < n; i++) {
-          parts.push({
-            x: x + (Math.random() - 0.5) * 4, y: y + (Math.random() - 0.5) * 4,
-            vx: (Math.random() - 0.5) * 0.9, vy: -(0.2 + Math.random() * 0.9),
-            life: 1, decay: 0.012 + Math.random() * 0.02, size: 1.4 + Math.random() * 2.4
-          });
-        }
+      function spawnOne(x, y, speed) {
+        if (parts.length > 230) return;
+        parts.push({
+          x: x + (Math.random() - 0.5) * 5, y: y + (Math.random() - 0.5) * 5,
+          vx: (Math.random() - 0.5) * 1.0, vy: -(0.3 + Math.random() * 1.1) - speed * 0.05,
+          life: 1, decay: 0.010 + Math.random() * 0.018, size: 1.2 + Math.random() * 2.6
+        });
+      }
+      function streak(ang, len, w, a) {
+        ctx.save(); ctx.rotate(ang);
+        var g = ctx.createLinearGradient(0, 0, len, 0);
+        g.addColorStop(0, 'rgba(150, 215, 250, ' + a + ')'); g.addColorStop(1, 'rgba(150, 215, 250, 0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(0, -w / 2); ctx.lineTo(len, 0); ctx.lineTo(0, w / 2); ctx.closePath(); ctx.fill();
+        ctx.restore();
+      }
+      function layer(rad, c0, c1) {
+        var g = ctx.createRadialGradient(0, 0, 0, 0, 0, rad);
+        g.addColorStop(0, c0); g.addColorStop(1, c1);
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, rad, 0, 6.2832); ctx.fill();
       }
       function frame(now) {
         var time = (now - t0) / 1000;
         computeTarget();
-        head.y += (targetY - head.y) * 0.12;            // eased "weight" / gravity pull
+        head.y += (targetY - head.y) * 0.12;                 // eased gravity weight
         var speed = Math.abs(head.y - prevY); prevY = head.y;
-        head.x = baseX + Math.sin(head.y * 0.018 + time * 1.2) * 9;  // organic wobble
+        head.x = baseX + Math.sin(head.y * 0.02 + time * 0.8) * 10;   // weave around the path
         litNodes(head.y);
-        if (speed > 0.05) spawn(head.x, head.y, speed);
+
+        var emit = Math.min(6, 1 + Math.floor(speed * 0.8));
+        for (var e = 0; e < emit; e++) spawnOne(head.x, head.y, speed);
 
         ctx.clearRect(0, 0, cssW, cssH);
-        // fragment trail (atmospheric drag)
+
+        // faint dotted path the comet weaves around
+        ctx.fillStyle = 'rgba(47, 127, 179, 0.08)';
+        for (var yy = 6; yy < cssH; yy += 15) { ctx.beginPath(); ctx.arc(baseX, yy, 1.1, 0, 6.2832); ctx.fill(); }
+
+        // tail: dense near core, dissipating into distinct fragments upward
         for (var i = parts.length - 1; i >= 0; i--) {
           var p = parts[i];
-          p.x += p.vx; p.y += p.vy; p.vx *= 0.93; p.vy *= 0.93; p.life -= p.decay;
+          p.x += p.vx; p.y += p.vy; p.vx *= 0.94; p.vy *= 0.94; p.life -= p.decay;
           if (p.life <= 0) { parts.splice(i, 1); continue; }
-          ctx.globalAlpha = p.life * 0.7;
-          ctx.fillStyle = 'rgba(150, 210, 245, 1)';
-          ctx.shadowBlur = 8; ctx.shadowColor = 'rgba(120, 195, 245, 0.9)';
-          ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(0.1, p.size * p.life), 0, 6.2832); ctx.fill();
+          var r = Math.max(0.1, p.size * p.life) * 2.1;
+          var pg = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
+          pg.addColorStop(0, 'rgba(185, 232, 255, ' + (p.life * 0.8) + ')');
+          pg.addColorStop(1, 'rgba(120, 200, 245, 0)');
+          ctx.fillStyle = pg; ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 6.2832); ctx.fill();
         }
-        ctx.globalAlpha = 1; ctx.shadowBlur = 0;
-        // comet aura + core
-        var gx = head.x, gy = head.y, g;
-        g = ctx.createRadialGradient(gx, gy, 0, gx, gy, 34);
-        g.addColorStop(0, 'rgba(143, 205, 238, 0.34)'); g.addColorStop(1, 'rgba(143, 205, 238, 0)');
-        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(gx, gy, 34, 0, 6.2832); ctx.fill();
-        g = ctx.createRadialGradient(gx, gy, 0, gx, gy, 14);
-        g.addColorStop(0, 'rgba(90, 180, 240, 0.7)'); g.addColorStop(1, 'rgba(90, 180, 240, 0)');
-        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(gx, gy, 14, 0, 6.2832); ctx.fill();
-        ctx.shadowBlur = 16; ctx.shadowColor = 'rgba(120, 200, 255, 0.95)';
-        g = ctx.createRadialGradient(gx, gy, 0, gx, gy, 5);
-        g.addColorStop(0, 'rgba(236, 250, 255, 1)'); g.addColorStop(0.5, 'rgba(120, 205, 255, 1)'); g.addColorStop(1, 'rgba(47, 127, 179, 0.9)');
-        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(gx, gy, 5, 0, 6.2832); ctx.fill();
-        ctx.shadowBlur = 0;
+
+        // flares pulling upward and outward (atmospheric friction)
+        ctx.save(); ctx.translate(head.x, head.y);
+        var sp = Math.min(1, speed * 0.18);
+        streak(-Math.PI / 2, 30 + sp * 46, 6, 0.5 * (0.6 + 0.4 * Math.sin(time * 7)));
+        streak(-Math.PI / 2 - 0.5, 18 + sp * 26, 4, 0.3 * (0.5 + 0.5 * Math.sin(time * 9 + 1)));
+        streak(-Math.PI / 2 + 0.5, 18 + sp * 26, 4, 0.3 * (0.5 + 0.5 * Math.sin(time * 8 + 2)));
+        ctx.restore();
+
+        // volumetric, vertically elongated body + pulsing core
+        ctx.save(); ctx.translate(head.x, head.y); ctx.scale(1, 1.7);
+        layer(38, 'rgba(120, 195, 240, 0.18)', 'rgba(120, 195, 240, 0)');
+        layer(22, 'rgba(120, 200, 245, 0.30)', 'rgba(120, 200, 245, 0)');
+        layer(12, 'rgba(175, 228, 255, 0.55)', 'rgba(120, 200, 245, 0)');
+        var pulse = 0.78 + 0.22 * Math.sin(time * 4.5);
+        layer(5.5, 'rgba(242, 253, 255, ' + pulse + ')', 'rgba(170, 230, 255, 0)');
+        ctx.restore();
 
         if (running) requestAnimationFrame(frame);
       }
@@ -485,7 +504,9 @@
       resize();
       window.addEventListener('resize', resize);
       window.addEventListener('load', resize);
-      window.__comet = function () { return { y: Math.round(head.y), target: Math.round(targetY), parts: parts.length, h: cssH }; };
+      if (window.ResizeObserver) { new ResizeObserver(resize).observe(timeline); }
+      if (document.fonts && document.fonts.ready) { document.fonts.ready.then(resize); }
+      window.__comet = function () { return { y: Math.round(head.y), target: Math.round(targetY), parts: parts.length, w: cssW, h: cssH }; };
 
       if (prefersReduced) {
         canvas.style.display = 'none';
@@ -495,9 +516,7 @@
         return;
       }
       if ('IntersectionObserver' in window) {
-        new IntersectionObserver(function (e) {
-          e.forEach(function (en) { en.isIntersecting ? start() : stop(); });
-        }, { threshold: 0 }).observe(timeline);
+        new IntersectionObserver(function (es) { es.forEach(function (en) { en.isIntersecting ? start() : stop(); }); }, { threshold: 0 }).observe(timeline);
       } else { start(); }
     })();
 

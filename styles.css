@@ -147,13 +147,9 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 
 /* ---------- experience timeline: particle comet ---------- */
 .timeline { position: relative; padding-left: 0; }
-/* faint guide track (subtle, never dominant) */
-.timeline::before {
-  content: ""; position: absolute; left: 11px; top: 8px; bottom: 8px; width: 2px;
-  background: var(--line-strong); opacity: 0.35; border-radius: 2px;
-}
-/* canvas where the comet + fragments are drawn; sits behind the cards */
-.tl-comet { position: absolute; left: -18px; top: 0; pointer-events: none; z-index: 0; }
+/* canvas spans the full list height (top+bottom:0) so the comet track maps
+   exactly to the experience section and can never go stale */
+.tl-comet { position: absolute; left: -18px; top: 0; bottom: 0; width: 70px; pointer-events: none; z-index: 0; }
 .timeline__list { position: relative; z-index: 1; margin: 0; padding: 0; }
 
 .tl-item { position: relative; padding-left: 48px; margin-bottom: 1.4rem; }
