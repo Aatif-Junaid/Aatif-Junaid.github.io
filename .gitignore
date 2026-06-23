@@ -1,0 +1,9 @@
+# Local-only / tooling, never deploy these
+.pdfscratch/
+node_modules/
+.claude/
+
+# OS noise
+Thumbs.db
+desktop.ini
+.DS_Store
