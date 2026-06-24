@@ -302,15 +302,31 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
   .tl-item { padding-left: 0; }
   .tl-lead, .tl-points li, .tl-desc { max-width: 100%; }
 
-  /* grids collapse to a single column */
-  .edu-grid, .sample-grid, .framework-grid { grid-template-columns: 1fr; }
-  .tool-groups { grid-template-columns: 1fr 1fr; }
+  /* single-column grids */
+  .edu-grid, .sample-grid { grid-template-columns: 1fr; }
   .metrics { grid-template-columns: repeat(2, 1fr); }
+
+  /* horizontal swipe rhythm for toolkit + pillars */
+  .tool-groups, .framework-grid {
+    display: flex; gap: 0.9rem; overflow-x: auto; scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 0.5rem;
+  }
+  .tool-groups::-webkit-scrollbar, .framework-grid::-webkit-scrollbar { display: none; }
+  .tool-group, .framework { flex: 0 0 80%; min-width: 80%; scroll-snap-align: start; }
 
   /* touch targets: minimum 44px */
   .site-nav { gap: 0.3rem 1rem; flex-wrap: wrap; justify-content: flex-end; }
   .site-nav a, .btn, .contact-list a, .footer-linkedin { min-height: 44px; display: inline-flex; align-items: center; }
   .contact-list li { grid-template-columns: 1fr; gap: 0.2rem; padding: 0.5rem 0; }
+
+  /* neon focus state replaces the comet on mobile/tablet */
+  .tl-card { transition: box-shadow 0.5s ease, border-color 0.5s ease; }
+  .tl-item.is-focus .tl-card {
+    border-color: rgba(143, 205, 238, 0.9);
+    box-shadow: 0 0 0 1px rgba(120, 200, 255, 0.6),
+                0 0 18px 2px rgba(120, 200, 255, 0.45),
+                0 0 42px 10px rgba(143, 205, 238, 0.32);
+  }
 }
 @media (max-width: 480px) {
   body { font-size: 16px; }
@@ -321,7 +337,6 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
   .tl-card, .contact-tile, .tools-tile { padding: 1.25rem; }
   .metrics { grid-template-columns: 1fr; }
   .metrics > .metric:nth-child(4):last-child { grid-column: auto; }
-  .tool-groups { grid-template-columns: 1fr; }
   .site-footer { flex-direction: column; align-items: flex-start; }
 }
 

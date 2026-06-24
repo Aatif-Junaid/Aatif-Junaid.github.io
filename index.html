@@ -136,15 +136,16 @@
             <p class="tl-desc">A global newsroom and policy-intelligence company covering politics, policy, and power.</p>
 
             <ul class="tl-points">
-              <li>Surfaced $325M in untapped revenue by pinpointing energy and tech lobby-spend accounts and tightening Salesforce integration.</li>
-              <li>Turned statistical analysis of user feedback into a product roadmap presented to product leadership.</li>
-              <li>Drove generative-AI adoption on a 4-person task force, reporting directly to internal stakeholders.</li>
+              <li>Enforced pricing compliance that unlocked $2.6M+ in renewal ACV, owning the weekly Wallet Retention Report for the COO.</li>
+              <li>Surfaced $325M in untapped revenue through deep account and market analysis.</li>
+              <li>Shaped the product roadmap from feedback analysis and ran MRR and vertical-profitability reporting across Pro, E&amp;E, and AIQ.</li>
+              <li>Helped lead the generative-AI task force bringing AI into the newsroom's workflow.</li>
             </ul>
 
             <div class="metrics" aria-label="POLITICO results">
-              <div class="metric metric--money"><span class="mi"><svg><use href="#ic-money"/></svg></span><span class="metric__num">$325M</span><span class="metric__label">Untapped revenue surfaced</span></div>
-              <div class="metric metric--up"><span class="mi"><svg><use href="#ic-up"/></svg></span><span class="metric__num">Roadmap</span><span class="metric__label">Built from user feedback</span></div>
-              <div class="metric metric--bolt"><span class="mi"><svg><use href="#ic-bolt"/></svg></span><span class="metric__num">Gen AI</span><span class="metric__label">Adoption task force</span></div>
+              <div class="metric metric--money"><span class="mi"><svg><use href="#ic-money"/></svg></span><span class="metric__num">$2.6M</span><span class="metric__label">Renewal ACV unlocked</span></div>
+              <div class="metric metric--up"><span class="mi"><svg><use href="#ic-up"/></svg></span><span class="metric__num">$325M</span><span class="metric__label">Untapped revenue surfaced</span></div>
+              <div class="metric metric--bolt"><span class="mi"><svg><use href="#ic-bolt"/></svg></span><span class="metric__num">Gen AI</span><span class="metric__label">Newsroom task force</span></div>
             </div>
           </div>
         </li>
@@ -155,7 +156,7 @@
           <div class="tile tl-card">
             <div class="tl-head">
               <a class="logo-chip" href="https://www.quantum.com/" target="_blank" rel="noopener" data-mono="Q" aria-label="Visit Quantum">
-                <img src="assets/logos/quantum.png" alt="Quantum Corporation logo" loading="lazy" onerror="this.style.display='none'" />
+                <img src="assets/logos/quantum.svg" alt="Quantum Corporation logo" loading="lazy" onerror="this.style.display='none'" />
               </a>
               <div class="tl-headtext">
                 <div class="tl-date">Oct 2021 to Jul 2022</div>
@@ -517,6 +518,30 @@
       if ('IntersectionObserver' in window) {
         new IntersectionObserver(function (es) { es.forEach(function (en) { en.isIntersecting ? start() : stop(); }); }, { threshold: 0 }).observe(timeline);
       } else { start(); }
+    })();
+
+    // Mobile/tablet only: neon "focus" glow on the experience card crossing
+    // the viewport center, replacing the comet (which is hidden below 768px).
+    (function () {
+      var mq = window.matchMedia('(max-width: 768px)');
+      var items = document.querySelectorAll('.tl-item');
+      if (!items.length) return;
+      var io = null;
+      function cb(entries) {
+        entries.forEach(function (en) { en.target.classList.toggle('is-focus', en.isIntersecting); });
+      }
+      function enable() {
+        if (io) return;
+        io = new IntersectionObserver(cb, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
+        items.forEach(function (it) { io.observe(it); });
+      }
+      function disable() {
+        if (io) { io.disconnect(); io = null; }
+        items.forEach(function (it) { it.classList.remove('is-focus'); });
+      }
+      function sync() { mq.matches ? enable() : disable(); }
+      sync();
+      if (mq.addEventListener) mq.addEventListener('change', sync); else mq.addListener(sync);
     })();
 
     // Smooth scroll for in-page nav links
