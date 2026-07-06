@@ -1,6 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#FDFBF7"/>
-  <text x="50%" y="50%" dy="0.02em" text-anchor="middle" dominant-baseline="central"
-        font-family="Georgia, 'Times New Roman', serif" font-size="38" font-weight="600" fill="#2b2925">A</text>
-  <rect x="16" y="46" width="32" height="3" rx="1.5" fill="#7c6450"/>
+  <defs>
+    <radialGradient id="w" cx="0.72" cy="0.22" r="0.95">
+      <stop offset="0" stop-color="#8fcdee" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#8fcdee" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="t" x1="10" y1="12" x2="46" y2="40.5" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8fcdee" stop-opacity="0.12"/>
+      <stop offset="0.55" stop-color="#8fcdee" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#4f9fd4"/>
+    </linearGradient>
+    <radialGradient id="g"><stop offset="0" stop-color="#8fcdee" stop-opacity="0.65"/><stop offset="1" stop-color="#8fcdee" stop-opacity="0"/></radialGradient>
+    <radialGradient id="c"><stop offset="0" stop-color="#f5feff"/><stop offset="0.6" stop-color="#aee0fb"/><stop offset="1" stop-color="#4f9fd4"/></radialGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#EEEDE8"/>
+  <rect width="64" height="64" rx="14" fill="url(#w)"/>
+  <path d="M 10 12 Q 34 11 46 29 L 36.5 40.5 Q 22 24 10 12 Z" fill="url(#t)"/>
+  <circle cx="42" cy="36" r="16" fill="url(#g)"/>
+  <circle cx="42" cy="36" r="7.5" fill="url(#c)"/>
+  <circle cx="42" cy="36" r="3.4" fill="#ffffff"/>
 </svg>
