@@ -2,6 +2,7 @@
 .pdfscratch/
 node_modules/
 .claude/
+Fable5/
 
 # OS noise
 Thumbs.db
