@@ -144,6 +144,9 @@ body::before {
   padding: 6px 10px; box-shadow: 0 5px 14px rgba(40, 70, 95, 0.12); transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .logo-chip img { height: 30px; width: auto; max-width: 100%; object-fit: contain; }
+.logo-duo { display: flex; align-items: center; gap: 0.5rem; flex: 0 0 auto; }
+.logo-plus { font-family: var(--sans); font-size: 1.05rem; font-weight: 600; color: var(--ink-soft); line-height: 1; }
+.logo-chip--mark { padding: 5px; }
 .logo-chip--dark { background: #23262e; border-color: #23262e; }
 a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 22px rgba(40, 110, 160, 0.28); }
 
