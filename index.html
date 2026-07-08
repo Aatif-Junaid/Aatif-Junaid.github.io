@@ -55,7 +55,7 @@
   <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=18" />
+  <link rel="stylesheet" href="styles.css?v=19" />
 </head>
 <body>
 
@@ -472,12 +472,12 @@
         canvas.height = Math.round(cssH * dpr);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
-      // tight symmetric sweep centered at width/2: the comet flows AROUND the
-      // experience list instead of flying to the screen edges. SAFE keeps the
-      // widest glow inside the (unclipped) canvas purely via trajectory.
-      var SAFE = 120;
+      // symmetric sweep centered at width/2, sized against the card column:
+      // the comet rides behind the cards but swings ~110px past their edges
+      // at each extreme, peeking out for a moment before tucking back in.
+      var SAFE = 60;
       function pathX(y, t) {
-        var amp = Math.max(140, Math.min(cssW * 0.24, cssW / 2 - SAFE));
+        var amp = Math.max(160, Math.min(cssW / 2 - SAFE, timeline.offsetWidth / 2 + 110));
         return cssW / 2 + Math.sin(y * 0.005 + t * 0.3) * amp;
       }
       function computeTarget() {
@@ -575,18 +575,18 @@
           ctx.rotate(Math.atan2(p.vy, p.vx));
           ctx.scale(stretch, 1);
           var pg = ctx.createRadialGradient(0, 0, 0, 0, 0, rr);
-          if (p.hue === 'v') {            // slow faint violet cloud
-            pg.addColorStop(0, 'rgba(150, 122, 235, ' + (p.life * 0.17) + ')');
-            pg.addColorStop(0.6, 'rgba(128, 98, 220, ' + (p.life * 0.10) + ')');
-            pg.addColorStop(1, 'rgba(110, 82, 205, 0)');
+          if (p.hue === 'v') {            // slow faint blue-violet cloud (barely purple)
+            pg.addColorStop(0, 'rgba(120, 165, 250, ' + (p.life * 0.16) + ')');
+            pg.addColorStop(0.6, 'rgba(105, 145, 240, ' + (p.life * 0.09) + ')');
+            pg.addColorStop(1, 'rgba(100, 130, 230, 0)');
           } else if (p.hue === 'w') {     // bright fast-dying spark
             pg.addColorStop(0, 'rgba(240, 250, 255, ' + (p.life * 0.85) + ')');
-            pg.addColorStop(0.5, 'rgba(170, 220, 255, ' + (p.life * 0.4) + ')');
-            pg.addColorStop(1, 'rgba(140, 130, 240, 0)');
-          } else {                        // blue core streak, violet edge
-            pg.addColorStop(0, 'rgba(175, 224, 255, ' + (p.life * 0.55) + ')');
-            pg.addColorStop(0.55, 'rgba(125, 195, 250, ' + (p.life * 0.26) + ')');
-            pg.addColorStop(1, 'rgba(135, 105, 230, 0)');
+            pg.addColorStop(0.5, 'rgba(150, 220, 255, ' + (p.life * 0.42) + ')');
+            pg.addColorStop(1, 'rgba(80, 180, 255, 0)');
+          } else {                        // neon blue core streak
+            pg.addColorStop(0, 'rgba(165, 225, 255, ' + (p.life * 0.55) + ')');
+            pg.addColorStop(0.55, 'rgba(95, 190, 255, ' + (p.life * 0.28) + ')');
+            pg.addColorStop(1, 'rgba(70, 160, 250, 0)');
           }
           ctx.fillStyle = pg; ctx.beginPath(); ctx.arc(0, 0, rr, 0, 6.2832); ctx.fill();
           ctx.restore();
@@ -608,8 +608,8 @@
           }
           var fg = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.size * 3.2);
           fg.addColorStop(0, 'rgba(225, 242, 255, ' + (f.life * 0.9) + ')');
-          fg.addColorStop(0.45, 'rgba(150, 200, 252, ' + (f.life * 0.45) + ')');
-          fg.addColorStop(1, 'rgba(140, 105, 232, 0)');
+          fg.addColorStop(0.45, 'rgba(130, 205, 255, ' + (f.life * 0.48) + ')');
+          fg.addColorStop(1, 'rgba(75, 165, 250, 0)');
           ctx.fillStyle = fg; ctx.beginPath(); ctx.arc(f.x, f.y, f.size * 3.2, 0, 6.2832); ctx.fill();
         }
 
@@ -622,9 +622,9 @@
           ctx.translate(head.x + offX, head.y - dirY * h * 0.55);
           ctx.scale(w / 40, (h * st) / 40);
           var g = ctx.createRadialGradient(0, 0, 0, 0, 0, 40);
-          g.addColorStop(0, 'rgba(140, 215, 255, ' + (a * fp) + ')');
-          g.addColorStop(0.55, 'rgba(150, 130, 245, ' + (a * 0.5 * fp) + ')');
-          g.addColorStop(1, 'rgba(110, 85, 215, 0)');
+          g.addColorStop(0, 'rgba(140, 220, 255, ' + (a * fp) + ')');
+          g.addColorStop(0.55, 'rgba(90, 185, 255, ' + (a * 0.55 * fp) + ')');
+          g.addColorStop(1, 'rgba(70, 150, 245, 0)');
           ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 40, 0, 6.2832); ctx.fill();
           ctx.restore();
         }
@@ -634,7 +634,7 @@
 
         // volumetric elongated body: cyan core wrapped in a violet outer halo
         ctx.save(); ctx.translate(head.x, head.y); ctx.scale(1, 1.7);
-        layer(95, 'rgba(130, 100, 225, 0.12)', 'rgba(130, 100, 225, 0)');
+        layer(95, 'rgba(85, 165, 245, 0.13)', 'rgba(85, 165, 245, 0)');
         layer(80, 'rgba(70, 165, 228, 0.24)', 'rgba(70, 165, 228, 0)');
         layer(58, 'rgba(78, 174, 236, 0.40)', 'rgba(78, 174, 236, 0)');
         layer(40, 'rgba(100, 190, 244, 0.56)', 'rgba(95, 185, 240, 0)');
