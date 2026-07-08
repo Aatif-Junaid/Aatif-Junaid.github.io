@@ -515,20 +515,31 @@
           var p = parts[i];
           p.x += p.vx; p.y += p.vy; p.vx *= 0.97; p.vy *= 0.98; p.life -= p.decay;
           if (p.life <= 0) { parts.splice(i, 1); continue; }
-          var r = Math.max(0.1, p.size * p.life) * 2.4;
-          var pg = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
-          pg.addColorStop(0, 'rgba(140, 210, 250, ' + (p.life * 0.85) + ')');
-          pg.addColorStop(1, 'rgba(80, 175, 235, 0)');
-          ctx.fillStyle = pg; ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 6.2832); ctx.fill();
+          // flaring streak: a tapered line drawn along the particle's motion,
+          // crisp bright core over a thin halo (no soft gas blobs)
+          var len = (3 + p.size * 2.6) * (0.35 + p.life);
+          var nx = p.vx, ny = p.vy, nm = Math.sqrt(nx * nx + ny * ny) || 1;
+          nx /= nm; ny /= nm;
+          var tx = p.x - nx * len, ty = p.y - ny * len;
+          ctx.lineCap = 'round';
+          ctx.strokeStyle = 'rgba(120, 195, 245, ' + (p.life * 0.30) + ')';
+          ctx.lineWidth = Math.max(0.6, p.size * p.life * 1.5);
+          ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(tx, ty); ctx.stroke();
+          ctx.strokeStyle = 'rgba(185, 230, 255, ' + (p.life * 0.85) + ')';
+          ctx.lineWidth = Math.max(0.4, p.size * p.life * 0.6);
+          ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(tx, ty); ctx.stroke();
         }
 
         // volumetric, vertically elongated body + pulsing core (cyan / light blue)
+        // extra mid layers + higher opacity = a thicker, denser head
         ctx.save(); ctx.translate(head.x, head.y); ctx.scale(1, 1.8);
-        layer(56, 'rgba(70, 165, 228, 0.22)', 'rgba(70, 165, 228, 0)');
-        layer(34, 'rgba(85, 180, 238, 0.42)', 'rgba(85, 180, 238, 0)');
-        layer(18, 'rgba(150, 220, 255, 0.64)', 'rgba(110, 200, 248, 0)');
+        layer(62, 'rgba(70, 165, 228, 0.26)', 'rgba(70, 165, 228, 0)');
+        layer(44, 'rgba(80, 175, 235, 0.40)', 'rgba(80, 175, 235, 0)');
+        layer(30, 'rgba(105, 190, 242, 0.55)', 'rgba(95, 185, 240, 0)');
+        layer(20, 'rgba(160, 222, 255, 0.75)', 'rgba(120, 205, 250, 0)');
+        layer(13, 'rgba(215, 242, 255, 0.85)', 'rgba(160, 225, 255, 0)');
         var pulse = 0.85 + 0.15 * Math.sin(time * 4.5);
-        layer(8, 'rgba(245, 254, 255, ' + pulse + ')', 'rgba(170, 230, 255, 0)');
+        layer(9, 'rgba(245, 254, 255, ' + pulse + ')', 'rgba(170, 230, 255, 0)');
         ctx.restore();
 
         if (running) requestAnimationFrame(frame);
