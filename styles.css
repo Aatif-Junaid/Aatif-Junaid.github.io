@@ -152,7 +152,7 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 /* canvas spans the full list height (top+bottom:0) so the comet track maps
    exactly to the experience section and can never go stale */
 .tl-comet {
-  position: absolute; left: -48px; top: 0; width: 132px; pointer-events: none; z-index: 0;
+  position: absolute; left: -60px; top: 0; width: 240px; pointer-events: none; z-index: 0;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
 }
