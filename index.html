@@ -55,7 +55,7 @@
   <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=17" />
+  <link rel="stylesheet" href="styles.css?v=18" />
 </head>
 <body>
 
@@ -447,17 +447,6 @@
       labels.forEach(function (l) { io.observe(l); });
     })();
 
-    // Active section: while a section occupies the middle of the viewport its
-    // title glows deep luminous blue, then settles as the next takes over
-    (function () {
-      var secs = document.querySelectorAll('.section');
-      if (!secs.length || !('IntersectionObserver' in window)) return;
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) { e.target.classList.toggle('section--active', e.isIntersecting); });
-      }, { rootMargin: '-25% 0px -55% 0px', threshold: 0 });
-      secs.forEach(function (s) { io.observe(s); });
-    })();
-
     // Gravity-driven particle comet weaving edge-to-edge BEHIND the experience
     // cards. Full-width background canvas, wide sine trajectory, and proximity
     // highlighting: the card the head is passing behind glows, then dims.
@@ -483,11 +472,12 @@
         canvas.height = Math.round(cssH * dpr);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
-      // wide symmetric sweep centered at width/2; SAFE keeps the widest
-      // flare/glow (~120px) fully inside the canvas so nothing clips
+      // tight symmetric sweep centered at width/2: the comet flows AROUND the
+      // experience list instead of flying to the screen edges. SAFE keeps the
+      // widest glow inside the (unclipped) canvas purely via trajectory.
       var SAFE = 120;
       function pathX(y, t) {
-        var amp = Math.max(60, cssW / 2 - SAFE);
+        var amp = Math.max(140, Math.min(cssW * 0.24, cssW / 2 - SAFE));
         return cssW / 2 + Math.sin(y * 0.005 + t * 0.3) * amp;
       }
       function computeTarget() {
@@ -504,14 +494,45 @@
           it.classList.toggle('comet-near', y > it.offsetTop - 10 && y < it.offsetTop + it.offsetHeight + 10);
         });
       }
-      // soft cyan tail particle; hvx makes the trail sweep behind the sideways motion
+      // layered tail plasma, three populations for texture:
+      // faint slow violet clouds / blue core streaks / bright fast-dying sparks.
+      // Strong negative vy = heavy upward atmospheric drag on everything shed.
       function spawnOne(x, y, speed, hvx) {
-        if (parts.length > 600) return;
-        parts.push({
-          x: x + (Math.random() - 0.5) * 5, y: y + (Math.random() - 0.5) * 5,
-          vx: (Math.random() - 0.5) * 1.0 - hvx * 0.35,
-          vy: -(0.35 + Math.random() * 1.15) - speed * 0.05,
-          life: 1, decay: 0.004 + Math.random() * 0.008, size: 1.7 + Math.random() * 3.3
+        if (parts.length > 900) return;
+        var kind = Math.random();
+        if (kind < 0.22) {
+          parts.push({
+            x: x + (Math.random() - 0.5) * 14, y: y + (Math.random() - 0.5) * 10,
+            vx: (Math.random() - 0.5) * 0.5 - hvx * 0.2, vy: -(0.25 + Math.random() * 0.5),
+            drag: 0.985, life: 1, decay: 0.003 + Math.random() * 0.004,
+            size: 6 + Math.random() * 7, hue: 'v'
+          });
+        } else if (kind < 0.75) {
+          parts.push({
+            x: x + (Math.random() - 0.5) * 5, y: y + (Math.random() - 0.5) * 5,
+            vx: (Math.random() - 0.5) * 1.0 - hvx * 0.35, vy: -(0.6 + Math.random() * 1.6) - speed * 0.08,
+            drag: 0.965, life: 1, decay: 0.005 + Math.random() * 0.009,
+            size: 1.8 + Math.random() * 3.2, hue: 'b'
+          });
+        } else {
+          parts.push({
+            x: x + (Math.random() - 0.5) * 4, y: y + (Math.random() - 0.5) * 4,
+            vx: (Math.random() - 0.5) * 1.6 - hvx * 0.3, vy: -(0.9 + Math.random() * 1.8) - speed * 0.1,
+            drag: 0.94, life: 1, decay: 0.018 + Math.random() * 0.02,
+            size: 1.2 + Math.random() * 2.0, hue: 'w'
+          });
+        }
+      }
+      // offshoots: fragments breaking off the head, arcing outward and upward,
+      // burning out while dragging their own blue/violet mini-tails
+      var frags = [];
+      function spawnFrag(x, y, hvx) {
+        if (frags.length > 14) return;
+        var side = Math.random() < 0.5 ? -1 : 1;
+        frags.push({
+          x: x, y: y,
+          vx: side * (0.7 + Math.random() * 1.6) - hvx * 0.2, vy: -(0.9 + Math.random() * 1.6),
+          life: 1, decay: 0.007 + Math.random() * 0.010, size: 2 + Math.random() * 2.6
         });
       }
       function layer(rad, c0, c1) {
@@ -524,13 +545,15 @@
         var time = (now - t0) / 1000;
         computeTarget();
         head.y += (targetY - head.y) * 0.12;                 // eased gravity weight
-        var speed = Math.abs(head.y - prevY); prevY = head.y;
-        head.x = pathX(head.y, time);                        // wide edge-to-edge sweep
+        var dy = head.y - prevY; var speed = Math.abs(dy); prevY = head.y;
+        var dirY = dy >= 0 ? 1 : -1;                         // direction of travel
+        head.x = pathX(head.y, time);                        // tight weave around the list
         var hvx = head.x - prevX; prevX = head.x;
         litNodes(head.y);
 
-        var emit = Math.min(12, 4 + Math.floor((speed + Math.abs(hvx)) * 1.2));
+        var emit = Math.min(14, 5 + Math.floor((speed + Math.abs(hvx)) * 1.2));
         for (var e = 0; e < emit; e++) spawnOne(head.x, head.y, speed, hvx);
+        if (Math.random() < 0.06 + Math.min(0.2, speed * 0.04)) spawnFrag(head.x, head.y, hvx);
 
         ctx.clearRect(0, 0, cssW, cssH);
 
@@ -538,13 +561,12 @@
         ctx.fillStyle = 'rgba(47, 127, 179, 0.10)';
         for (var yy = 6; yy < cssH; yy += 18) { ctx.beginPath(); ctx.arc(pathX(yy, time), yy, 1.2, 0, 6.2832); ctx.fill(); }
 
-        // elongated cyan tail: soft radial particles trailing upward, fading out
+        // thick layered plasma tail: soft motion-stretched embers in three
+        // populations (violet clouds, blue streaks, white-hot sparks)
         for (var i = parts.length - 1; i >= 0; i--) {
           var p = parts[i];
-          p.x += p.vx; p.y += p.vy; p.vx *= 0.97; p.vy *= 0.98; p.life -= p.decay;
+          p.x += p.vx; p.y += p.vy; p.vx *= p.drag; p.vy *= p.drag; p.life -= p.decay;
           if (p.life <= 0) { parts.splice(i, 1); continue; }
-          // soft flare: a feather-edged ember stretched along its motion vector,
-          // so the trail flickers with streaks but never hardens into drawn lines
           var vlen = Math.sqrt(p.vx * p.vx + p.vy * p.vy) || 0.001;
           var rr = Math.max(0.7, p.size * (0.5 + p.life)) * 1.7;
           var stretch = 1 + Math.min(3, vlen * 1.7);
@@ -553,24 +575,88 @@
           ctx.rotate(Math.atan2(p.vy, p.vx));
           ctx.scale(stretch, 1);
           var pg = ctx.createRadialGradient(0, 0, 0, 0, 0, rr);
-          pg.addColorStop(0, 'rgba(180, 226, 255, ' + (p.life * 0.6) + ')');
-          pg.addColorStop(0.6, 'rgba(130, 200, 248, ' + (p.life * 0.26) + ')');
-          pg.addColorStop(1, 'rgba(110, 190, 245, 0)');
+          if (p.hue === 'v') {            // slow faint violet cloud
+            pg.addColorStop(0, 'rgba(150, 122, 235, ' + (p.life * 0.17) + ')');
+            pg.addColorStop(0.6, 'rgba(128, 98, 220, ' + (p.life * 0.10) + ')');
+            pg.addColorStop(1, 'rgba(110, 82, 205, 0)');
+          } else if (p.hue === 'w') {     // bright fast-dying spark
+            pg.addColorStop(0, 'rgba(240, 250, 255, ' + (p.life * 0.85) + ')');
+            pg.addColorStop(0.5, 'rgba(170, 220, 255, ' + (p.life * 0.4) + ')');
+            pg.addColorStop(1, 'rgba(140, 130, 240, 0)');
+          } else {                        // blue core streak, violet edge
+            pg.addColorStop(0, 'rgba(175, 224, 255, ' + (p.life * 0.55) + ')');
+            pg.addColorStop(0.55, 'rgba(125, 195, 250, ' + (p.life * 0.26) + ')');
+            pg.addColorStop(1, 'rgba(135, 105, 230, 0)');
+          }
           ctx.fillStyle = pg; ctx.beginPath(); ctx.arc(0, 0, rr, 0, 6.2832); ctx.fill();
           ctx.restore();
         }
 
-        // volumetric, vertically elongated body + pulsing core (cyan / light blue)
-        // extra mid layers + higher opacity = a thicker, denser head
+        // offshoots: disintegrating fragments arcing away, each dragging a
+        // blue/violet mini-tail that decays and burns out
+        for (var k = frags.length - 1; k >= 0; k--) {
+          var f = frags[k];
+          f.x += f.vx; f.y += f.vy; f.vx *= 0.99; f.vy *= 0.988; f.life -= f.decay;
+          if (f.life <= 0) { frags.splice(k, 1); continue; }
+          if (parts.length < 890) {
+            parts.push({
+              x: f.x, y: f.y,
+              vx: -f.vx * 0.25 + (Math.random() - 0.5) * 0.3, vy: -0.35 - Math.random() * 0.3,
+              drag: 0.95, life: 0.7 * f.life, decay: 0.02 + Math.random() * 0.02,
+              size: 0.9 + Math.random() * 1.5, hue: Math.random() < 0.5 ? 'b' : 'v'
+            });
+          }
+          var fg = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.size * 3.2);
+          fg.addColorStop(0, 'rgba(225, 242, 255, ' + (f.life * 0.9) + ')');
+          fg.addColorStop(0.45, 'rgba(150, 200, 252, ' + (f.life * 0.45) + ')');
+          fg.addColorStop(1, 'rgba(140, 105, 232, 0)');
+          ctx.fillStyle = fg; ctx.beginPath(); ctx.arc(f.x, f.y, f.size * 3.2, 0, 6.2832); ctx.fill();
+        }
+
+        // blue-to-violet volumetric flares: soft ellipses stretched backward
+        // (opposite the travel direction), pulsing and scaling with velocity
+        var st = 1 + Math.min(2.2, speed * 0.22 + Math.abs(hvx) * 0.15);
+        var fp = 0.7 + 0.3 * Math.sin(time * 5.2);
+        function backFlare(offX, w, h, a) {
+          ctx.save();
+          ctx.translate(head.x + offX, head.y - dirY * h * 0.55);
+          ctx.scale(w / 40, (h * st) / 40);
+          var g = ctx.createRadialGradient(0, 0, 0, 0, 0, 40);
+          g.addColorStop(0, 'rgba(140, 215, 255, ' + (a * fp) + ')');
+          g.addColorStop(0.55, 'rgba(150, 130, 245, ' + (a * 0.5 * fp) + ')');
+          g.addColorStop(1, 'rgba(110, 85, 215, 0)');
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 40, 0, 6.2832); ctx.fill();
+          ctx.restore();
+        }
+        backFlare(0, 46, 120, 0.30);
+        backFlare(-26, 26, 80, 0.22);
+        backFlare(26, 26, 80, 0.22);
+
+        // volumetric elongated body: cyan core wrapped in a violet outer halo
         ctx.save(); ctx.translate(head.x, head.y); ctx.scale(1, 1.7);
+        layer(95, 'rgba(130, 100, 225, 0.12)', 'rgba(130, 100, 225, 0)');
         layer(80, 'rgba(70, 165, 228, 0.24)', 'rgba(70, 165, 228, 0)');
         layer(58, 'rgba(78, 174, 236, 0.40)', 'rgba(78, 174, 236, 0)');
         layer(40, 'rgba(100, 190, 244, 0.56)', 'rgba(95, 185, 240, 0)');
         layer(26, 'rgba(150, 218, 255, 0.74)', 'rgba(120, 205, 250, 0)');
-        layer(17, 'rgba(205, 240, 255, 0.90)', 'rgba(160, 225, 255, 0)');
-        var pulse = 0.9 + 0.1 * Math.sin(time * 4.5);
-        layer(11, 'rgba(250, 255, 255, ' + pulse + ')', 'rgba(180, 235, 255, 0)');
         ctx.restore();
+
+        // the big front: a dense, turbulent core LEADING the motion
+        var lx = head.x + Math.sin(time * 9) * 2.5;
+        var ly = head.y + dirY * 16 + Math.sin(time * 7) * 2;
+        var pulse = 0.9 + 0.1 * Math.sin(time * 4.5);
+        var fg2 = ctx.createRadialGradient(lx, ly, 0, lx, ly, 34);
+        fg2.addColorStop(0, 'rgba(125, 195, 252, 0.45)');
+        fg2.addColorStop(1, 'rgba(115, 150, 240, 0)');
+        ctx.fillStyle = fg2; ctx.beginPath(); ctx.arc(lx, ly, 34, 0, 6.2832); ctx.fill();
+        var fg3 = ctx.createRadialGradient(lx, ly, 0, lx, ly, 20);
+        fg3.addColorStop(0, 'rgba(185, 232, 255, ' + (0.7 * pulse) + ')');
+        fg3.addColorStop(1, 'rgba(150, 210, 252, 0)');
+        ctx.fillStyle = fg3; ctx.beginPath(); ctx.arc(lx, ly, 20, 0, 6.2832); ctx.fill();
+        var fg4 = ctx.createRadialGradient(lx, ly, 0, lx, ly, 10);
+        fg4.addColorStop(0, 'rgba(250, 253, 255, ' + pulse + ')');
+        fg4.addColorStop(1, 'rgba(200, 240, 255, 0)');
+        ctx.fillStyle = fg4; ctx.beginPath(); ctx.arc(lx, ly, 10, 0, 6.2832); ctx.fill();
 
         if (running) requestAnimationFrame(frame);
       }
