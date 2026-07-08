@@ -55,7 +55,7 @@
   <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=15" />
+  <link rel="stylesheet" href="styles.css?v=16" />
 </head>
 <body>
 
@@ -447,9 +447,9 @@
       labels.forEach(function (l) { io.observe(l); });
     })();
 
-    // Gravity-driven particle comet, anchored to the experience list so its
-    // travel maps exactly to the list height (no stale canvas size). Volumetric
-    // elongated body, pulsing core, upward flares, and a dissipating tail.
+    // Gravity-driven particle comet weaving edge-to-edge BEHIND the experience
+    // cards. Full-width background canvas, wide sine trajectory, and proximity
+    // highlighting: the card the head is passing behind glows, then dims.
     (function () {
       var timeline = document.querySelector('.timeline');
       var canvas = document.querySelector('.tl-comet');
@@ -458,19 +458,24 @@
       var items = timeline.querySelectorAll('.tl-item');
       var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      var dpr = 1, cssW = 240, cssH = 0, baseX = 80;
-      var head = { x: baseX, y: 0 }, targetY = 0, prevY = 0;
+      var dpr = 1, cssW = 0, cssH = 0;
+      var head = { x: 0, y: 0 }, targetY = 0, prevY = 0, prevX = 0;
       var parts = [], running = false, t0 = performance.now();
 
       function resize() {
         dpr = Math.max(1, Math.min(2.5, window.devicePixelRatio || 1));   // crisper on hi-DPI
-        cssW = 240;                                                       // wide lane so the head never clips
+        cssW = timeline.offsetWidth;             // full container width: edge-to-edge travel
         cssH = timeline.offsetHeight;            // list height (canvas is absolute, no feedback)
         canvas.style.width = cssW + 'px';
         canvas.style.height = cssH + 'px';
         canvas.width = Math.round(cssW * dpr);
         canvas.height = Math.round(cssH * dpr);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      // wide sweep: far left edge to far right edge as the comet descends
+      function pathX(y, t) {
+        var amp = Math.max(60, cssW / 2 - 90);
+        return cssW / 2 + Math.sin(y * 0.0045 + t * 0.35) * amp;
       }
       function computeTarget() {
         var rect = timeline.getBoundingClientRect();
@@ -482,14 +487,17 @@
           var dot = it.querySelector('.tl-dot');
           var c = it.offsetTop + (dot ? dot.offsetTop + dot.offsetHeight / 2 : 0);
           it.classList.toggle('lit', y >= c);
+          // proximity: glow while the head is passing behind this card
+          it.classList.toggle('comet-near', y > it.offsetTop - 10 && y < it.offsetTop + it.offsetHeight + 10);
         });
       }
-      // soft cyan tail particle, long-lived so the trail stretches far behind
-      function spawnOne(x, y, speed) {
+      // soft cyan tail particle; hvx makes the trail sweep behind the sideways motion
+      function spawnOne(x, y, speed, hvx) {
         if (parts.length > 600) return;
         parts.push({
           x: x + (Math.random() - 0.5) * 5, y: y + (Math.random() - 0.5) * 5,
-          vx: (Math.random() - 0.5) * 1.0, vy: -(0.35 + Math.random() * 1.15) - speed * 0.05,
+          vx: (Math.random() - 0.5) * 1.0 - hvx * 0.35,
+          vy: -(0.35 + Math.random() * 1.15) - speed * 0.05,
           life: 1, decay: 0.004 + Math.random() * 0.008, size: 1.7 + Math.random() * 3.3
         });
       }
@@ -504,17 +512,18 @@
         computeTarget();
         head.y += (targetY - head.y) * 0.12;                 // eased gravity weight
         var speed = Math.abs(head.y - prevY); prevY = head.y;
-        head.x = baseX + Math.sin(head.y * 0.02 + time * 0.8) * 14;   // smooth weave along the path
+        head.x = pathX(head.y, time);                        // wide edge-to-edge sweep
+        var hvx = head.x - prevX; prevX = head.x;
         litNodes(head.y);
 
-        var emit = Math.min(12, 4 + Math.floor(speed * 1.2));
-        for (var e = 0; e < emit; e++) spawnOne(head.x, head.y, speed);
+        var emit = Math.min(12, 4 + Math.floor((speed + Math.abs(hvx)) * 1.2));
+        for (var e = 0; e < emit; e++) spawnOne(head.x, head.y, speed, hvx);
 
         ctx.clearRect(0, 0, cssW, cssH);
 
-        // faint dotted path the comet weaves around
+        // faint dotted trajectory tracing the same sweep the comet rides
         ctx.fillStyle = 'rgba(47, 127, 179, 0.10)';
-        for (var yy = 6; yy < cssH; yy += 15) { ctx.beginPath(); ctx.arc(baseX, yy, 1.2, 0, 6.2832); ctx.fill(); }
+        for (var yy = 6; yy < cssH; yy += 18) { ctx.beginPath(); ctx.arc(pathX(yy, time), yy, 1.2, 0, 6.2832); ctx.fill(); }
 
         // elongated cyan tail: soft radial particles trailing upward, fading out
         for (var i = parts.length - 1; i >= 0; i--) {

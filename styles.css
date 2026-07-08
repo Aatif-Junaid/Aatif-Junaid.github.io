@@ -155,11 +155,22 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 /* canvas spans the full list height (top+bottom:0) so the comet track maps
    exactly to the experience section and can never go stale */
 .tl-comet {
-  position: absolute; left: -128px; top: 0; width: 240px; pointer-events: none; z-index: 0; opacity: 0.5;
+  position: absolute; left: 0; top: 0; width: 100%; pointer-events: none; z-index: 0; opacity: 0.5;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
 }
 .timeline__list { position: relative; z-index: 1; margin: 0; padding: 0; }
+/* proximity highlight: the card the comet head is passing behind lifts and glows */
+.tl-card { transition: box-shadow 0.6s ease, border-color 0.6s ease, transform 0.6s ease; }
+@media (min-width: 769px) {
+  .tl-item.comet-near .tl-card {
+    border-color: rgba(143, 205, 238, 0.95);
+    transform: translateY(-3px);
+    box-shadow: 0 22px 56px rgba(40, 110, 160, 0.20),
+                0 0 0 1px rgba(143, 205, 238, 0.45),
+                0 0 36px 8px rgba(143, 205, 238, 0.24);
+  }
+}
 
 .tl-item { position: relative; padding-left: 64px; margin-bottom: 1.4rem; }
 .tl-item:last-child { margin-bottom: 0; }
