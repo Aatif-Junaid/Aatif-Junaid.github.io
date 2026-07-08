@@ -4,7 +4,7 @@
       <stop offset="0" stop-color="#8fcdee" stop-opacity="0.5"/>
       <stop offset="1" stop-color="#8fcdee" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="t" x1="10" y1="10" x2="50" y2="44" gradientUnits="userSpaceOnUse">
+    <linearGradient id="t" x1="10" y1="54" x2="50" y2="20" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#8fcdee" stop-opacity="0.10"/>
       <stop offset="0.55" stop-color="#8fcdee" stop-opacity="0.75"/>
       <stop offset="1" stop-color="#4f9fd4"/>
@@ -14,9 +14,9 @@
   </defs>
   <rect width="64" height="64" rx="14" fill="#EEEDE8"/>
   <rect width="64" height="64" rx="14" fill="url(#w)"/>
-  <path d="M 9 9 Q 32 10 47 36 L 39.5 44 Q 21 21 9 9 Z" fill="url(#t)"/>
-  <circle cx="45" cy="42" r="12" fill="url(#g)"/>
-  <circle cx="45" cy="42" r="5.5" fill="url(#c)"/>
-  <circle cx="45" cy="42" r="2.4" fill="#ffffff"/>
-  <text x="30" y="49" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="46" font-weight="700" fill="#1f5575">A</text>
+  <path d="M 9 55 Q 32 54 47 28 L 39.5 20 Q 21 43 9 55 Z" fill="url(#t)"/>
+  <circle cx="45" cy="22" r="12" fill="url(#g)"/>
+  <circle cx="45" cy="22" r="5.5" fill="url(#c)"/>
+  <circle cx="45" cy="22" r="2.4" fill="#ffffff"/>
+  <text x="30" y="49" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="46" font-weight="700" fill="#143a63">A</text>
 </svg>

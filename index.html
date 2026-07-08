@@ -55,7 +55,7 @@
   <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=16" />
+  <link rel="stylesheet" href="styles.css?v=17" />
 </head>
 <body>
 
@@ -447,6 +447,17 @@
       labels.forEach(function (l) { io.observe(l); });
     })();
 
+    // Active section: while a section occupies the middle of the viewport its
+    // title glows deep luminous blue, then settles as the next takes over
+    (function () {
+      var secs = document.querySelectorAll('.section');
+      if (!secs.length || !('IntersectionObserver' in window)) return;
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { e.target.classList.toggle('section--active', e.isIntersecting); });
+      }, { rootMargin: '-25% 0px -55% 0px', threshold: 0 });
+      secs.forEach(function (s) { io.observe(s); });
+    })();
+
     // Gravity-driven particle comet weaving edge-to-edge BEHIND the experience
     // cards. Full-width background canvas, wide sine trajectory, and proximity
     // highlighting: the card the head is passing behind glows, then dims.
@@ -464,7 +475,7 @@
 
       function resize() {
         dpr = Math.max(1, Math.min(2.5, window.devicePixelRatio || 1));   // crisper on hi-DPI
-        cssW = timeline.offsetWidth;             // full container width: edge-to-edge travel
+        cssW = document.documentElement.clientWidth;   // full viewport width: true edge-to-edge travel
         cssH = timeline.offsetHeight;            // list height (canvas is absolute, no feedback)
         canvas.style.width = cssW + 'px';
         canvas.style.height = cssH + 'px';
@@ -472,10 +483,12 @@
         canvas.height = Math.round(cssH * dpr);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
-      // wide sweep: far left edge to far right edge as the comet descends
+      // wide symmetric sweep centered at width/2; SAFE keeps the widest
+      // flare/glow (~120px) fully inside the canvas so nothing clips
+      var SAFE = 120;
       function pathX(y, t) {
-        var amp = Math.max(60, cssW / 2 - 90);
-        return cssW / 2 + Math.sin(y * 0.0045 + t * 0.35) * amp;
+        var amp = Math.max(60, cssW / 2 - SAFE);
+        return cssW / 2 + Math.sin(y * 0.005 + t * 0.3) * amp;
       }
       function computeTarget() {
         var rect = timeline.getBoundingClientRect();

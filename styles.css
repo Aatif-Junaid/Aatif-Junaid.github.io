@@ -135,7 +135,12 @@ body::before {
 .eyebrow { display: block; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--blue-deep); margin-bottom: 0.5rem; transition: color 0.4s ease, text-shadow 0.4s ease; }
 .eyebrow--active { color: var(--blue); text-shadow: 0 0 16px rgba(143, 205, 238, 0.75); }
 .toolkit-wrap { margin-top: 1.5rem; }
-.section-title { font-family: var(--serif); font-weight: 600; font-size: clamp(1.9rem, 4.4vw, 3rem); line-height: 1.12; letter-spacing: -0.01em; }
+.section-title {
+  font-family: var(--serif); font-weight: 600; font-size: clamp(2.3rem, 5.2vw, 3.7rem);
+  line-height: 1.12; letter-spacing: -0.01em;
+  transition: color 0.5s ease, text-shadow 0.5s ease;
+}
+.section--active .section-title { color: var(--blue-deep); text-shadow: 0 0 26px rgba(47, 127, 179, 0.45); }
 
 /* ---------- shared logo chip ---------- */
 .logo-chip {
@@ -155,7 +160,7 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 /* canvas spans the full list height (top+bottom:0) so the comet track maps
    exactly to the experience section and can never go stale */
 .tl-comet {
-  position: absolute; left: 0; top: 0; width: 100%; pointer-events: none; z-index: 0; opacity: 0.5;
+  position: absolute; left: 50%; transform: translateX(-50%); top: 0; width: 100vw; pointer-events: none; z-index: 0; opacity: 0.5;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
 }
@@ -329,7 +334,7 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 @media (max-width: 768px) {
   .hero__name { font-size: clamp(2.6rem, 12vw, 4rem); }
   .hero__statement { font-size: clamp(1.25rem, 5vw, 1.6rem); }
-  .section-title { font-size: clamp(1.6rem, 6vw, 2.1rem); }
+  .section-title { font-size: clamp(1.9rem, 7vw, 2.5rem); }
 
   /* stack the experience card header so nothing is squished into a column */
   .tl-head { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
@@ -372,7 +377,7 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
   body { font-size: 16px; }
   .section { padding-top: clamp(1.5rem, 6vw, 2.25rem); padding-bottom: clamp(1.5rem, 6vw, 2.25rem); }
   .hero__name { font-size: clamp(2.2rem, 13vw, 3rem); }
-  .section-title { font-size: 1.5rem; }
+  .section-title { font-size: 1.8rem; }
   .tl-role { font-size: 1.25rem; }
   .tl-card, .contact-tile, .tools-tile { padding: 1.25rem; }
   .metrics { grid-template-columns: 1fr; }
