@@ -30,7 +30,7 @@
   --serif: "Playfair Display", Georgia, "Times New Roman", serif;
   --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 
-  --maxw: 1080px;
+  --maxw: 1380px;
   --gutter: clamp(1.25rem, 5vw, 3.5rem);
   --radius: 24px;
 }
@@ -155,7 +155,7 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 /* canvas spans the full list height (top+bottom:0) so the comet track maps
    exactly to the experience section and can never go stale */
 .tl-comet {
-  position: absolute; left: -60px; top: 0; width: 240px; pointer-events: none; z-index: 0;
+  position: absolute; left: -128px; top: 0; width: 240px; pointer-events: none; z-index: 0; opacity: 0.5;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
 }
@@ -185,7 +185,7 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 .tl-desc { font-style: italic; font-size: 0.92rem; color: var(--ink-soft); line-height: 1.55; margin-bottom: 1.1rem; }
 .tl-lead { font-size: 1.05rem; line-height: 1.6; margin-bottom: 1rem; max-width: 64ch; }
 .tl-points { display: grid; gap: 0.6rem; margin-bottom: 1.4rem; }
-.tl-points li { position: relative; padding-left: 1.1rem; color: var(--ink-soft); max-width: 66ch; }
+.tl-points li { position: relative; padding-left: 1.1rem; color: var(--ink-soft); max-width: 74ch; }
 .tl-points li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 6px; height: 6px; border-radius: 50%; background: var(--sky); box-shadow: 0 0 0 2px rgba(47, 127, 179, 0.25); }
 
 /* metrics with tiny animated icons */
