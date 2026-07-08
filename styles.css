@@ -99,7 +99,7 @@ body::before {
 .hero, .section, .site-footer { padding-left: var(--gutter); padding-right: var(--gutter); }
 
 /* ---------- hero ---------- */
-.hero { max-width: var(--maxw); margin: 0 auto; padding-top: clamp(3.5rem, 9vw, 7rem); padding-bottom: clamp(2.5rem, 6vw, 4.5rem); }
+.hero { max-width: var(--maxw); margin: 0 auto; padding-top: clamp(3rem, 8vw, 5.5rem); padding-bottom: clamp(1.75rem, 4vw, 2.75rem); }
 .kicker { font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue-deep); font-weight: 600; margin-bottom: 1.1rem; }
 .hero__name {
   font-family: var(--serif); font-weight: 700;
@@ -130,7 +130,7 @@ body::before {
 .btn:not(.btn--primary):hover { border-color: var(--blue); color: var(--blue-deep); }
 
 /* ---------- section scaffold ---------- */
-.section { max-width: var(--maxw); margin: 0 auto; padding-top: clamp(3rem, 7vw, 5.5rem); padding-bottom: clamp(3rem, 7vw, 5.5rem); }
+.section { max-width: var(--maxw); margin: 0 auto; padding-top: clamp(1.75rem, 4vw, 2.5rem); padding-bottom: clamp(1.75rem, 4vw, 2.5rem); }
 .section-head { margin-bottom: clamp(1.8rem, 4vw, 2.8rem); }
 .eyebrow { display: block; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--blue-deep); margin-bottom: 0.5rem; transition: color 0.4s ease, text-shadow 0.4s ease; }
 .eyebrow--active { color: var(--blue); text-shadow: 0 0 16px rgba(143, 205, 238, 0.75); }
@@ -231,7 +231,7 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 .tools li:hover { border-color: var(--sky); color: #fff; background: rgba(143, 205, 238, 0.22); transform: translateY(-1px); }
 
 /* ---------- work / what I build ---------- */
-.sample-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-bottom: 1.8rem; }
+.sample-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
 .sample { padding: 1.8rem 1.7rem; }
 .sample__title { font-family: var(--serif); font-weight: 600; font-size: 1.5rem; line-height: 1.14; margin-bottom: 0.7rem; }
 .sample__body { color: var(--ink-soft); font-size: 0.97rem; }
@@ -356,7 +356,7 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 }
 @media (max-width: 480px) {
   body { font-size: 16px; }
-  .section { padding-top: clamp(2.4rem, 9vw, 3.4rem); padding-bottom: clamp(2.4rem, 9vw, 3.4rem); }
+  .section { padding-top: clamp(1.5rem, 6vw, 2.25rem); padding-bottom: clamp(1.5rem, 6vw, 2.25rem); }
   .hero__name { font-size: clamp(2.2rem, 13vw, 3rem); }
   .section-title { font-size: 1.5rem; }
   .tl-role { font-size: 1.25rem; }
