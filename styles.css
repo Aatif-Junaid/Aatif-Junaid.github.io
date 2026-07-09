@@ -225,6 +225,14 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 .quote__name:hover { color: var(--blue); }
 .quote__role { font-size: 0.78rem; color: var(--ink-soft); }
 
+/* ---------- design-partner testimonials ---------- */
+.proof-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+.proof-card { position: relative; display: flex; flex-direction: column; gap: 1.1rem; padding: clamp(1.4rem, 2.5vw, 1.9rem); }
+.proof__text { position: relative; font-family: var(--serif); font-style: italic; font-size: 1.05rem; line-height: 1.5; color: var(--ink); }
+.proof__cite { display: flex; flex-direction: column; gap: 0.12rem; margin-top: auto; }
+.proof__name { font-weight: 600; font-size: 0.92rem; color: var(--blue-deep); }
+.proof__role { font-size: 0.78rem; color: var(--ink-soft); }
+
 /* ---------- education ---------- */
 .edu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-bottom: 1.2rem; }
 .edu-card { padding: 1.6rem 1.6rem; }
@@ -354,7 +362,7 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
   .tl-lead, .tl-points li, .tl-desc { max-width: 100%; }
 
   /* single-column grids */
-  .edu-grid, .sample-grid { grid-template-columns: 1fr; }
+  .edu-grid, .sample-grid, .proof-grid { grid-template-columns: 1fr; }
   .metrics { grid-template-columns: repeat(2, 1fr); }
 
   /* horizontal swipe rhythm for toolkit + pillars */
