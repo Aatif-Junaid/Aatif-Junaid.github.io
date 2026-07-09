@@ -217,8 +217,9 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 .metric__label { font-size: 0.7rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-soft); line-height: 1.3; }
 
 /* design-partner quote */
-.quote { margin: 1.5rem 0 0; padding: 1.2rem 1.5rem; background: rgba(47, 127, 179, 0.08); border-left: 3px solid var(--blue); border-radius: 0 14px 14px 0; }
-.quote__text { font-family: var(--serif); font-style: italic; font-size: clamp(1.1rem, 2.4vw, 1.4rem); line-height: 1.34; margin-bottom: 0.8rem; }
+.quote { position: relative; overflow: hidden; margin: 1.5rem 0 0; padding: 1.5rem 1.7rem 1.2rem; background: rgba(47, 127, 179, 0.08); border-left: 3px solid var(--blue); border-radius: 0 14px 14px 0; }
+.quote::before { content: "\201C"; position: absolute; top: 0.1rem; right: 0.9rem; font-family: var(--serif); font-weight: 700; font-size: 4.2rem; line-height: 1; color: rgba(47, 127, 179, 0.14); pointer-events: none; }
+.quote__text { position: relative; font-family: var(--serif); font-style: italic; font-size: clamp(1.15rem, 2.4vw, 1.45rem); line-height: 1.42; margin-bottom: 0.85rem; }
 .quote__cite { display: flex; flex-direction: column; gap: 0.1rem; }
 .quote__name { align-self: flex-start; font-weight: 600; font-size: 0.95rem; color: var(--blue-deep); border-bottom: 1.5px solid var(--sky); transition: color 0.2s ease; }
 .quote__name:hover { color: var(--blue); }
