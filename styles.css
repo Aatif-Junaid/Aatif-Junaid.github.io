@@ -135,7 +135,7 @@ body::before {
 .section-head { margin-bottom: clamp(1.8rem, 4vw, 2.8rem); }
 .eyebrow { display: block; font-size: clamp(1.05rem, 1.9vw, 1.4rem); letter-spacing: 0.16em; text-transform: uppercase; font-weight: 800; color: var(--blue-deep); margin-bottom: 0.6rem; transition: color 0.4s ease, text-shadow 0.4s ease; }
 .eyebrow--active { color: var(--blue); text-shadow: 0 0 22px rgba(47, 127, 179, 0.55); }
-.toolkit-wrap { margin-top: 1.5rem; }
+#toolkit .eyebrow { margin-bottom: 1rem; }
 .section-title { font-family: var(--serif); font-weight: 600; font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.14; letter-spacing: -0.01em; }
 
 /* ---------- shared logo chip ---------- */
@@ -232,7 +232,6 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 .edu-card__note { color: var(--ink-soft); font-size: 0.95rem; }
 
 /* ---------- toolkit: standardized single navy ---------- */
-.toolkit-wrap .eyebrow { margin-bottom: 1rem; }
 .tool-groups { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
 .tool-group {
   background: var(--tile-bg);
