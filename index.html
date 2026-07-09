@@ -477,7 +477,7 @@
       // at each extreme, peeking out for a moment before tucking back in.
       var SAFE = 60;
       function pathX(y, t) {
-        var amp = Math.max(160, Math.min(cssW / 2 - SAFE, timeline.offsetWidth / 2 + 110));
+        var amp = Math.max(160, Math.min(cssW / 2 - SAFE, timeline.offsetWidth / 2 + 50));
         return cssW / 2 + Math.sin(y * 0.005 + t * 0.3) * amp;
       }
       function computeTarget() {
@@ -505,14 +505,14 @@
             x: x + (Math.random() - 0.5) * 14, y: y + (Math.random() - 0.5) * 10,
             vx: (Math.random() - 0.5) * 0.5 - hvx * 0.2, vy: -(0.25 + Math.random() * 0.5),
             drag: 0.985, life: 1, decay: 0.003 + Math.random() * 0.004,
-            size: 6 + Math.random() * 7, hue: 'v'
+            size: 4.5 + Math.random() * 5, hue: 'v'
           });
         } else if (kind < 0.75) {
           parts.push({
             x: x + (Math.random() - 0.5) * 5, y: y + (Math.random() - 0.5) * 5,
             vx: (Math.random() - 0.5) * 1.0 - hvx * 0.35, vy: -(0.6 + Math.random() * 1.6) - speed * 0.08,
             drag: 0.965, life: 1, decay: 0.005 + Math.random() * 0.009,
-            size: 1.8 + Math.random() * 3.2, hue: 'b'
+            size: 1.5 + Math.random() * 2.6, hue: 'b'
           });
         } else {
           parts.push({
@@ -628,35 +628,36 @@
           ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 40, 0, 6.2832); ctx.fill();
           ctx.restore();
         }
-        backFlare(0, 46, 120, 0.30);
-        backFlare(-26, 26, 80, 0.22);
-        backFlare(26, 26, 80, 0.22);
+        backFlare(0, 46, 120, 0.15);
+        backFlare(-26, 26, 80, 0.11);
+        backFlare(26, 26, 80, 0.11);
 
-        // volumetric elongated body: cyan core wrapped in a violet outer halo
+        // volumetric elongated body: glare halved on the outer halo, density
+        // shifted inward so the core reads thicker than the tail
         ctx.save(); ctx.translate(head.x, head.y); ctx.scale(1, 1.7);
-        layer(95, 'rgba(85, 165, 245, 0.13)', 'rgba(85, 165, 245, 0)');
-        layer(80, 'rgba(70, 165, 228, 0.24)', 'rgba(70, 165, 228, 0)');
-        layer(58, 'rgba(78, 174, 236, 0.40)', 'rgba(78, 174, 236, 0)');
-        layer(40, 'rgba(100, 190, 244, 0.56)', 'rgba(95, 185, 240, 0)');
-        layer(26, 'rgba(150, 218, 255, 0.74)', 'rgba(120, 205, 250, 0)');
+        layer(95, 'rgba(85, 165, 245, 0.06)', 'rgba(85, 165, 245, 0)');
+        layer(80, 'rgba(70, 165, 228, 0.12)', 'rgba(70, 165, 228, 0)');
+        layer(58, 'rgba(78, 174, 236, 0.46)', 'rgba(78, 174, 236, 0)');
+        layer(44, 'rgba(100, 190, 244, 0.66)', 'rgba(95, 185, 240, 0)');
+        layer(30, 'rgba(150, 218, 255, 0.85)', 'rgba(120, 205, 250, 0)');
         ctx.restore();
 
         // the big front: a dense, turbulent core LEADING the motion
         var lx = head.x + Math.sin(time * 9) * 2.5;
         var ly = head.y + dirY * 16 + Math.sin(time * 7) * 2;
         var pulse = 0.9 + 0.1 * Math.sin(time * 4.5);
-        var fg2 = ctx.createRadialGradient(lx, ly, 0, lx, ly, 34);
-        fg2.addColorStop(0, 'rgba(125, 195, 252, 0.45)');
-        fg2.addColorStop(1, 'rgba(115, 150, 240, 0)');
-        ctx.fillStyle = fg2; ctx.beginPath(); ctx.arc(lx, ly, 34, 0, 6.2832); ctx.fill();
-        var fg3 = ctx.createRadialGradient(lx, ly, 0, lx, ly, 20);
-        fg3.addColorStop(0, 'rgba(185, 232, 255, ' + (0.7 * pulse) + ')');
+        var fg2 = ctx.createRadialGradient(lx, ly, 0, lx, ly, 40);
+        fg2.addColorStop(0, 'rgba(125, 195, 252, 0.52)');
+        fg2.addColorStop(1, 'rgba(115, 165, 245, 0)');
+        ctx.fillStyle = fg2; ctx.beginPath(); ctx.arc(lx, ly, 40, 0, 6.2832); ctx.fill();
+        var fg3 = ctx.createRadialGradient(lx, ly, 0, lx, ly, 26);
+        fg3.addColorStop(0, 'rgba(185, 232, 255, ' + (0.8 * pulse) + ')');
         fg3.addColorStop(1, 'rgba(150, 210, 252, 0)');
-        ctx.fillStyle = fg3; ctx.beginPath(); ctx.arc(lx, ly, 20, 0, 6.2832); ctx.fill();
-        var fg4 = ctx.createRadialGradient(lx, ly, 0, lx, ly, 10);
+        ctx.fillStyle = fg3; ctx.beginPath(); ctx.arc(lx, ly, 26, 0, 6.2832); ctx.fill();
+        var fg4 = ctx.createRadialGradient(lx, ly, 0, lx, ly, 13);
         fg4.addColorStop(0, 'rgba(250, 253, 255, ' + pulse + ')');
         fg4.addColorStop(1, 'rgba(200, 240, 255, 0)');
-        ctx.fillStyle = fg4; ctx.beginPath(); ctx.arc(lx, ly, 10, 0, 6.2832); ctx.fill();
+        ctx.fillStyle = fg4; ctx.beginPath(); ctx.arc(lx, ly, 13, 0, 6.2832); ctx.fill();
 
         if (running) requestAnimationFrame(frame);
       }
