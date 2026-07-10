@@ -204,6 +204,10 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 /* metrics with tiny animated icons */
 .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.9rem; margin-bottom: 0.2rem; }
 .metrics > .metric:nth-child(4):last-child { grid-column: 2 / 3; }   /* center a lone 4th tile */
+/* 5 tiles: three across the top, the last two centered underneath */
+.metrics--balanced { grid-template-columns: repeat(6, 1fr); }
+.metrics--balanced > .metric { grid-column: span 2; }
+.metrics--balanced > .metric:nth-child(4) { grid-column: 2 / span 2; }
 .metric {
   position: relative; background: rgba(255, 255, 255, 0.55); border: 1px solid var(--line);
   border-radius: 16px; padding: 1rem 1rem 0.95rem; overflow: hidden;
@@ -387,7 +391,8 @@ a.dp-name:hover { color: var(--blue); }
 
   /* single-column grids */
   .edu-grid, .sample-grid, .proof-grid { grid-template-columns: 1fr; }
-  .metrics { grid-template-columns: repeat(2, 1fr); }
+  .metrics, .metrics--balanced { grid-template-columns: repeat(2, 1fr); }
+  .metrics--balanced > .metric, .metrics--balanced > .metric:nth-child(4) { grid-column: auto; }
 
   /* horizontal swipe rhythm for toolkit + pillars */
   .tool-groups, .framework-grid {
@@ -400,6 +405,8 @@ a.dp-name:hover { color: var(--blue); }
   /* touch targets: minimum 44px */
   .site-nav { gap: 0.3rem 1rem; flex-wrap: wrap; justify-content: flex-end; }
   .site-nav a, .btn, .contact-list a, .footer-linkedin { min-height: 44px; display: inline-flex; align-items: center; }
+  .dp-arrow { width: 44px; height: 44px; }          /* meet the 44px touch target */
+  .dp-head { flex-wrap: wrap; }                      /* label wraps rather than squeezing the arrows */
   .contact-list li { grid-template-columns: 1fr; gap: 0.2rem; padding: 0.5rem 0; }
   .contact-intro { gap: 0.85rem; }
   .contact-photo { width: 80px; height: 80px; }
@@ -420,7 +427,7 @@ a.dp-name:hover { color: var(--blue); }
   .section-title { font-size: 1.35rem; }
   .tl-role { font-size: 1.25rem; }
   .tl-card, .contact-tile { padding: 1.25rem; }
-  .metrics { grid-template-columns: 1fr; }
+  .metrics, .metrics--balanced { grid-template-columns: 1fr; }
   .metrics > .metric:nth-child(4):last-child { grid-column: auto; }
   .site-footer { flex-direction: column; align-items: flex-start; }
 }
