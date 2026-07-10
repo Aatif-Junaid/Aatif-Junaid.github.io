@@ -55,7 +55,7 @@
   <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=24" />
+  <link rel="stylesheet" href="styles.css?v=25" />
 </head>
 <body>
 
@@ -145,7 +145,13 @@
             </div>
 
             <div class="dp-carousel reveal" aria-label="Design partner testimonials">
-              <span class="dp-label">Design partners I recruited, on the product</span>
+              <div class="dp-head">
+                <span class="dp-label">Design partners I recruited, on the product</span>
+                <div class="dp-nav">
+                  <button class="dp-arrow" type="button" data-dir="-1" aria-label="Previous testimonials">&lsaquo;</button>
+                  <button class="dp-arrow" type="button" data-dir="1" aria-label="Next testimonials">&rsaquo;</button>
+                </div>
+              </div>
               <div class="dp-track">
                 <figure class="dp-slide">
                   <blockquote>&ldquo;Aisepedia brings structure to that ambiguity in a way I&rsquo;ve never seen before. It lets you get hyper-specific about your ICP and seamlessly thread that precision across every artifact you create.&rdquo;</blockquote>
@@ -182,13 +188,6 @@
                     <span class="dp-role">Global Product Marketing Leader, WP Engine</span>
                   </figcaption>
                 </figure>
-              </div>
-              <div class="dp-dots">
-                <button class="dp-dot is-active" type="button" aria-label="Testimonial 1"></button>
-                <button class="dp-dot" type="button" aria-label="Testimonial 2"></button>
-                <button class="dp-dot" type="button" aria-label="Testimonial 3"></button>
-                <button class="dp-dot" type="button" aria-label="Testimonial 4"></button>
-                <button class="dp-dot" type="button" aria-label="Testimonial 5"></button>
               </div>
             </div>
           </div>
@@ -293,40 +292,6 @@
         </li>
 
         </ol>
-      </div>
-    </section>
-
-    <!-- SOCIAL PROOF: DESIGN PARTNERS -->
-    <section class="section" id="proof">
-      <div class="section-head reveal">
-        <span class="eyebrow">Design Partners</span>
-        <h2 class="section-title">What the design partners said</h2>
-      </div>
-
-      <div class="proof-grid">
-        <figure class="tile proof-card reveal">
-          <blockquote class="proof__text">&ldquo;Super impressed by what they are building. Imagine inputting your features and messaging and generating key assets in a single click.&rdquo;</blockquote>
-          <figcaption class="proof__cite">
-            <span class="proof__name">Lara McCaskill</span>
-            <span class="proof__role">Director of Product Marketing, Atlassian</span>
-          </figcaption>
-        </figure>
-
-        <figure class="tile proof-card reveal">
-          <blockquote class="proof__text">&ldquo;The depth was immediately obvious: need scoring, ICP fit, buyer dynamics, all in one place. I especially loved the insights about each audience.&rdquo;</blockquote>
-          <figcaption class="proof__cite">
-            <span class="proof__name">Katie McPhee</span>
-            <span class="proof__role">Global Product Marketing Leader, WP Engine</span>
-          </figcaption>
-        </figure>
-
-        <figure class="tile proof-card reveal">
-          <blockquote class="proof__text">&ldquo;Aisepedia has the potential to be the mecca of PMM AI tools for market research and developing differentiated messaging and positioning.&rdquo;</blockquote>
-          <figcaption class="proof__cite">
-            <span class="proof__name">Michele Nieberding</span>
-            <span class="proof__role">Head of Product Marketing, Optiversal</span>
-          </figcaption>
-        </figure>
       </div>
     </section>
 
@@ -781,25 +746,29 @@
       if (mq.addEventListener) mq.addEventListener('change', sync); else mq.addListener(sync);
     })();
 
-    // Design partner testimonial carousel: swipe + dots + gentle auto-advance
+    // Design partner testimonials: 2-up carousel with prev/next arrows, swipe,
+    // and gentle auto-advance that pauses on interaction.
     (function () {
       var car = document.querySelector('.dp-carousel');
       if (!car) return;
       var track = car.querySelector('.dp-track');
-      var slides = car.querySelectorAll('.dp-slide');
-      var dots = car.querySelectorAll('.dp-dot');
-      if (!track || !slides.length) return;
-      function step() { return track.clientWidth + (parseFloat(getComputedStyle(track).gap) || 0); }
-      function current() { return Math.round(track.scrollLeft / step()); }
-      function goto(i) { track.scrollTo({ left: i * step(), behavior: 'smooth' }); }
-      function sync() { var idx = current(); dots.forEach(function (d, i) { d.classList.toggle('is-active', i === idx); }); }
-      dots.forEach(function (d, i) { d.addEventListener('click', function () { goto(i); }); });
+      var arrows = car.querySelectorAll('.dp-arrow');
+      if (!track) return;
+      function atStart() { return track.scrollLeft <= 2; }
+      function atEnd() { return track.scrollLeft >= track.scrollWidth - track.clientWidth - 2; }
+      function refresh() { if (arrows[0]) arrows[0].disabled = atStart(); if (arrows[1]) arrows[1].disabled = atEnd(); }
+      function move(dir) {
+        if (dir > 0 && atEnd()) { track.scrollTo({ left: 0, behavior: 'smooth' }); }
+        else if (dir < 0 && atStart()) { track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' }); }
+        else { track.scrollBy({ left: dir * track.clientWidth, behavior: 'smooth' }); }
+      }
+      arrows.forEach(function (a) { a.addEventListener('click', function () { move(parseInt(a.getAttribute('data-dir'), 10)); }); });
       var ticking = false;
-      track.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(function () { sync(); ticking = false; }); } }, { passive: true });
-      sync();
+      track.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(function () { refresh(); ticking = false; }); } }, { passive: true });
+      refresh();
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         var paused = false;
-        setInterval(function () { if (!paused) goto((current() + 1) % slides.length); }, 6000);
+        setInterval(function () { if (!paused) move(1); }, 7000);
         ['pointerenter', 'pointerdown', 'focusin'].forEach(function (e) { car.addEventListener(e, function () { paused = true; }, { passive: true }); });
         ['pointerup', 'pointerleave', 'focusout'].forEach(function (e) { car.addEventListener(e, function () { paused = false; }, { passive: true }); });
       }

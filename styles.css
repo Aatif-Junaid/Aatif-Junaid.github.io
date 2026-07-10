@@ -40,7 +40,7 @@
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 body {
   margin: 0; background: var(--paper); color: var(--ink);
-  font-family: var(--sans); font-size: 18px; line-height: 1.65;
+  font-family: var(--sans); font-size: 16px; line-height: 1.6;
   -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden; overflow-wrap: break-word; word-wrap: break-word;
 }
 h1, h2, h3, p, ul, ol { margin: 0; }
@@ -103,7 +103,7 @@ body::before {
 .kicker { font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue-deep); font-weight: 600; margin-bottom: 1.1rem; }
 .hero__name {
   font-family: var(--serif); font-weight: 700;
-  font-size: clamp(3rem, 9vw, 6.2rem); line-height: 1.12; letter-spacing: -0.01em; padding-bottom: 0.1em;
+  font-size: clamp(2.5rem, 7.5vw, 5rem); line-height: 1.12; letter-spacing: -0.01em; padding-bottom: 0.1em;
   background: linear-gradient(110deg, var(--blue-deep) 0%, var(--blue) 42%, var(--sky-deep) 72%, var(--blue) 100%);
   background-size: 220% auto; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 16px rgba(80, 170, 240, 0.30));   /* faint neon-blue aura */
@@ -227,11 +227,21 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 
 /* design partner testimonial carousel (inside the Aisepedia card) */
 .dp-carousel { margin-top: 1.6rem; }
-.dp-label { display: block; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: var(--blue-deep); margin-bottom: 0.8rem; }
+.dp-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.85rem; }
+.dp-label { display: block; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: var(--blue-deep); }
+.dp-nav { display: flex; gap: 0.4rem; flex: 0 0 auto; }
+.dp-arrow {
+  width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line-strong);
+  background: rgba(255, 255, 255, 0.6); color: var(--blue-deep); font-size: 1.25rem; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease, opacity 0.25s ease;
+}
+.dp-arrow:hover { background: rgba(143, 205, 238, 0.35); border-color: var(--sky-deep); transform: translateY(-1px); }
+.dp-arrow:disabled { opacity: 0.3; cursor: default; transform: none; }
 .dp-track { display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .dp-track::-webkit-scrollbar { display: none; }
 .dp-slide {
-  flex: 0 0 100%; min-width: 100%; scroll-snap-align: start; margin: 0;
+  flex: 0 0 calc(50% - 0.5rem); min-width: calc(50% - 0.5rem); scroll-snap-align: start; margin: 0;
   display: flex; flex-direction: column; position: relative; overflow: hidden;
   padding: 1.5rem 1.7rem 1.3rem; background: rgba(47, 127, 179, 0.08);
   border-left: 3px solid var(--blue); border-radius: 0 14px 14px 0;
@@ -243,17 +253,8 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 a.dp-name { border-bottom: 1.5px solid var(--sky); transition: color 0.2s ease; }
 a.dp-name:hover { color: var(--blue); }
 .dp-role { display: block; font-size: 0.78rem; color: var(--ink-soft); margin-top: 0.15rem; }
-.dp-dots { display: flex; gap: 0.5rem; justify-content: center; margin-top: 1rem; }
-.dp-dot { width: 9px; height: 9px; border-radius: 50%; border: none; padding: 0; background: rgba(47, 127, 179, 0.22); cursor: pointer; transition: background 0.3s ease, transform 0.3s ease; }
-.dp-dot.is-active { background: var(--blue); transform: scale(1.35); }
 
 /* ---------- design-partner testimonials ---------- */
-.proof-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
-.proof-card { position: relative; display: flex; flex-direction: column; gap: 1.1rem; padding: clamp(1.4rem, 2.5vw, 1.9rem); }
-.proof__text { position: relative; font-family: var(--serif); font-style: italic; font-size: 1.05rem; line-height: 1.5; color: var(--ink); }
-.proof__cite { display: flex; flex-direction: column; gap: 0.12rem; margin-top: auto; }
-.proof__name { font-weight: 600; font-size: 0.92rem; color: var(--blue-deep); }
-.proof__role { font-size: 0.78rem; color: var(--ink-soft); }
 
 /* ---------- education ---------- */
 .edu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-bottom: 1.2rem; }
@@ -382,6 +383,7 @@ a.dp-name:hover { color: var(--blue); }
   .tl-comet, .tl-dot { display: none; }
   .tl-item { padding-left: 0; }
   .tl-lead, .tl-points li, .tl-desc { max-width: 100%; }
+  .dp-slide { flex: 0 0 100%; min-width: 100%; }
 
   /* single-column grids */
   .edu-grid, .sample-grid, .proof-grid { grid-template-columns: 1fr; }
