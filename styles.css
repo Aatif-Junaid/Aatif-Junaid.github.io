@@ -225,6 +225,28 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 .quote__name:hover { color: var(--blue); }
 .quote__role { font-size: 0.78rem; color: var(--ink-soft); }
 
+/* design partner testimonial carousel (inside the Aisepedia card) */
+.dp-carousel { margin-top: 1.6rem; }
+.dp-label { display: block; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: var(--blue-deep); margin-bottom: 0.8rem; }
+.dp-track { display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.dp-track::-webkit-scrollbar { display: none; }
+.dp-slide {
+  flex: 0 0 100%; min-width: 100%; scroll-snap-align: start; margin: 0;
+  display: flex; flex-direction: column; position: relative; overflow: hidden;
+  padding: 1.5rem 1.7rem 1.3rem; background: rgba(47, 127, 179, 0.08);
+  border-left: 3px solid var(--blue); border-radius: 0 14px 14px 0;
+}
+.dp-slide::before { content: "\201C"; position: absolute; top: 0.1rem; right: 0.9rem; font-family: var(--serif); font-weight: 700; font-size: 4.2rem; line-height: 1; color: rgba(47, 127, 179, 0.14); pointer-events: none; }
+.dp-slide blockquote { position: relative; margin: 0 0 0.9rem; font-family: var(--serif); font-style: italic; font-size: clamp(1.02rem, 2.1vw, 1.3rem); line-height: 1.44; }
+.dp-slide figcaption { margin-top: auto; }
+.dp-name { display: inline-block; font-weight: 600; font-size: 0.95rem; color: var(--blue-deep); }
+a.dp-name { border-bottom: 1.5px solid var(--sky); transition: color 0.2s ease; }
+a.dp-name:hover { color: var(--blue); }
+.dp-role { display: block; font-size: 0.78rem; color: var(--ink-soft); margin-top: 0.15rem; }
+.dp-dots { display: flex; gap: 0.5rem; justify-content: center; margin-top: 1rem; }
+.dp-dot { width: 9px; height: 9px; border-radius: 50%; border: none; padding: 0; background: rgba(47, 127, 179, 0.22); cursor: pointer; transition: background 0.3s ease, transform 0.3s ease; }
+.dp-dot.is-active { background: var(--blue); transform: scale(1.35); }
+
 /* ---------- design-partner testimonials ---------- */
 .proof-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
 .proof-card { position: relative; display: flex; flex-direction: column; gap: 1.1rem; padding: clamp(1.4rem, 2.5vw, 1.9rem); }
