@@ -208,6 +208,22 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 .metrics--balanced { grid-template-columns: repeat(6, 1fr); }
 .metrics--balanced > .metric { grid-column: span 2; }
 .metrics--balanced > .metric:nth-child(4) { grid-column: 2 / span 2; }
+
+/* reports owned: collapsible depth panel in the POLITICO card */
+.reports { margin-top: 1.4rem; border-top: 1px solid var(--line); padding-top: 1.05rem; }
+.reports__summary { display: block; cursor: pointer; list-style: none; }
+.reports__summary::-webkit-details-marker { display: none; }
+.reports__head { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; }
+.reports__title { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: var(--blue-deep); }
+.reports__chev { color: var(--blue); font-size: 1.3rem; line-height: 1; transition: transform 0.3s ease; }
+.reports[open] .reports__chev { transform: rotate(90deg); }
+.reports__meta { display: block; margin-top: 0.3rem; font-size: 0.82rem; line-height: 1.4; color: var(--ink-soft); }
+.reports__list { margin: 1rem 0 0; display: grid; gap: 0.75rem; }
+.reports__item { display: flex; gap: 0.75rem; align-items: flex-start; }
+.reports__freq { flex: 0 0 auto; align-self: flex-start; font-size: 0.64rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--blue-deep); background: rgba(143, 205, 238, 0.26); border: 1px solid rgba(143, 205, 238, 0.5); border-radius: 999px; padding: 0.24rem 0; width: 72px; text-align: center; }
+.reports__body { font-size: 0.9rem; line-height: 1.5; color: var(--ink-soft); }
+.reports__body strong { color: var(--ink); font-weight: 600; }
+.reports__foot { margin: 0.95rem 0 0; font-size: 0.82rem; line-height: 1.5; color: var(--ink-soft); }
 .metric {
   position: relative; background: rgba(255, 255, 255, 0.55); border: 1px solid var(--line);
   border-radius: 16px; padding: 1rem 1rem 0.95rem; overflow: hidden;
