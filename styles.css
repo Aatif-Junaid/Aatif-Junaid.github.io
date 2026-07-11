@@ -230,7 +230,7 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 .reports { margin-top: 1.4rem; border-top: 1px solid var(--line); padding-top: 1.05rem; }
 .reports__summary { display: block; cursor: pointer; list-style: none; }
 .reports__summary::-webkit-details-marker { display: none; }
-.reports__head { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; }
+.reports__head { display: flex; align-items: center; justify-content: flex-start; gap: 0.55rem; }
 .reports__title { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: var(--blue-deep); }
 .reports__chev { color: var(--blue); font-size: 1.3rem; line-height: 1; transition: transform 0.3s ease; }
 .reports[open] .reports__chev { transform: rotate(90deg); }
