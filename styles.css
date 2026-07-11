@@ -196,6 +196,23 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 .tl-link { color: var(--blue); border-bottom: 1.5px solid var(--sky); transition: color 0.2s ease; }
 .tl-link:hover { color: var(--blue-deep); }
 .tl-desc { font-style: italic; font-size: 0.92rem; color: var(--ink-soft); line-height: 1.55; margin-bottom: 1.1rem; }
+.tl-note { font-size: 0.86rem; color: var(--ink-soft); line-height: 1.55; margin: -0.35rem 0 1.1rem; }
+.tl-note__badge {
+  display: inline-block; margin-right: 0.4rem; padding: 0.14rem 0.6rem; border-radius: 999px;
+  font-size: 0.64rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--blue-deep); background: rgba(143, 205, 238, 0.26); border: 1px solid rgba(143, 205, 238, 0.5);
+  vertical-align: 1px;
+}
+/* MBA interlude: a slim dashed card, deliberately lighter than a job card */
+.tl-gapcard {
+  display: flex; align-items: flex-start; gap: 0.9rem;
+  padding: 0.95rem 1.25rem; border: 1.5px dashed var(--line-strong); border-radius: 18px;
+  background: rgba(255, 255, 255, 0.35);
+}
+.logo-chip--sm { height: 40px; min-width: 40px; padding: 6px; border-radius: 10px; }
+.logo-chip--sm img { height: 22px; }
+.tl-gaptext { margin: 0.15rem 0 0; font-size: 0.88rem; line-height: 1.55; color: var(--ink-soft); }
+.tl-gaptext strong { color: var(--ink); font-weight: 600; }
 .tl-lead { font-size: 1.05rem; line-height: 1.6; margin-bottom: 1rem; max-width: 64ch; }
 .tl-points { display: grid; gap: 0.6rem; margin-bottom: 1.4rem; }
 .tl-points li { position: relative; padding-left: 1.1rem; color: var(--ink-soft); }
