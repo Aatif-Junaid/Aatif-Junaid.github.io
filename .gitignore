@@ -3,6 +3,7 @@
 node_modules/
 .claude/
 Fable5/
+HANDOFF.md
 
 # OS noise
 Thumbs.db
