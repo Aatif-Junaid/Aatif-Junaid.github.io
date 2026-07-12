@@ -456,6 +456,7 @@ a.dp-name:hover { color: var(--blue); }
   /* touch targets: minimum 44px */
   .site-nav { gap: 0.3rem 1rem; flex-wrap: wrap; justify-content: flex-end; }
   .site-nav a, .btn, .contact-list a, .footer-linkedin { min-height: 44px; display: inline-flex; align-items: center; }
+  .site-nav a { min-width: 44px; justify-content: center; }
   .dp-arrow { width: 44px; height: 44px; }          /* meet the 44px touch target */
   .dp-head { flex-wrap: wrap; }                      /* label wraps rather than squeezing the arrows */
   .contact-list li { grid-template-columns: 1fr; gap: 0.2rem; padding: 0.5rem 0; }
