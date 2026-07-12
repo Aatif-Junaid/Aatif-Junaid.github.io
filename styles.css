@@ -96,7 +96,9 @@ body::before {
 .site-nav a:hover { color: var(--ink); border-color: var(--sky); }
 
 /* ---------- shared layout ---------- */
+main { position: relative; isolation: isolate; }
 .hero, .section, .site-footer { padding-left: var(--gutter); padding-right: var(--gutter); }
+.hero, .section { position: relative; z-index: 1; }
 
 /* ---------- hero ---------- */
 .hero { max-width: var(--maxw); margin: 0 auto; padding-top: clamp(3.5rem, 9vw, 6.5rem); padding-bottom: clamp(2rem, 5vw, 3.5rem); text-align: center; }
@@ -111,7 +113,7 @@ body::before {
 }
 @keyframes shimmer { 0% { background-position: 0% center; } 50% { background-position: 100% center; } 100% { background-position: 0% center; } }
 .hero__tagline { font-size: clamp(0.95rem, 2.2vw, 1.15rem); font-weight: 600; color: var(--ink); margin-bottom: 1.6rem; }
-.hero__story { position: relative; max-width: 52rem; margin: 0 auto 1rem; padding-bottom: 7.5rem; }
+.hero__story { position: relative; max-width: 52rem; margin: 0 auto 2.4rem; }
 .hero__statement {
   font-family: var(--serif); font-weight: 500; font-style: italic;
   font-size: clamp(1.4rem, 3.4vw, 2.25rem); line-height: 1.3; color: var(--ink); margin: 0 auto;
@@ -120,11 +122,10 @@ body::before {
 .hero__statement strong { margin-top: 0.16em; }
 .hero__statement strong { font-style: normal; font-weight: 700; color: var(--blue-deep); }
 .hero__trajectory {
-  position: absolute; left: 50%; bottom: -0.2rem; width: min(36rem, 72vw); height: 8.5rem; transform: translateX(-50%);
-  overflow: visible; pointer-events: none;
+  position: absolute; left: 0; z-index: 0; overflow: visible; pointer-events: none;
 }
 .hero__trajectory path {
-  fill: none; stroke: rgba(47, 127, 179, 0.38); stroke-width: 1.7; stroke-linecap: round;
+  fill: none; stroke: rgba(47, 127, 179, 0.42); stroke-width: 1.7; stroke-linecap: round;
   stroke-dasharray: 0.25 3.35; vector-effect: non-scaling-stroke;
   filter: drop-shadow(0 0 2px rgba(143, 205, 238, 0.45));
 }
@@ -425,7 +426,7 @@ a.dp-name:hover { color: var(--blue); }
 @media (max-width: 768px) {
   .hero__name { font-size: clamp(2.6rem, 12vw, 4rem); }
   .hero__statement { font-size: clamp(1.25rem, 5vw, 1.6rem); }
-  .hero__story { padding-bottom: 0; margin-bottom: 2rem; }
+  .hero__story { margin-bottom: 2rem; }
   .hero__trajectory { display: none; }
   .section-title { font-size: clamp(1.45rem, 5.5vw, 1.85rem); }
 

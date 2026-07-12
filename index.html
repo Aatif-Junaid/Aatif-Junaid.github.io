@@ -56,7 +56,7 @@
   <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=33" />
+  <link rel="stylesheet" href="styles.css?v=34" />
 </head>
 <body>
 
@@ -95,9 +95,6 @@
           <span>And I do it with data.</span>
           <strong>Let me show you.</strong>
         </p>
-        <svg class="hero__trajectory" viewBox="0 0 520 190" preserveAspectRatio="none" aria-hidden="true">
-          <path pathLength="100" d="M 260 8 C 416 10, 440 63, 315 70 C 172 78, 146 118, 258 126 C 362 134, 368 166, 260 186" />
-        </svg>
       </div>
 
       <div class="hero__actions reveal">
@@ -106,6 +103,10 @@
         <a class="btn" href="resume.pdf?v=2026-07b" target="_blank" rel="noopener">Resume</a>
       </div>
     </section>
+
+    <svg class="hero__trajectory" aria-hidden="true" preserveAspectRatio="none">
+      <path pathLength="100" />
+    </svg>
 
     <!-- EXPERIENCE TIMELINE -->
     <section class="section" id="experience">
@@ -520,6 +521,42 @@
     // Footer year
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    // Dotted bridge from the hero invitation to the exact start of the comet
+    // canvas. Its geometry follows the rendered layout instead of fixed pixels.
+    (function () {
+      var main = document.querySelector('main');
+      var bridge = document.querySelector('.hero__trajectory');
+      var path = bridge && bridge.querySelector('path');
+      var start = document.querySelector('.hero__statement strong');
+      var timeline = document.querySelector('.timeline');
+      if (!main || !bridge || !path || !start || !timeline) return;
+      var queued = false;
+      function layoutBridge() {
+        queued = false;
+        if (window.matchMedia('(max-width: 768px), (prefers-reduced-motion: reduce)').matches) return;
+        var mainRect = main.getBoundingClientRect();
+        var startRect = start.getBoundingClientRect();
+        var timelineRect = timeline.getBoundingClientRect();
+        var width = main.clientWidth;
+        var top = startRect.bottom - mainRect.top + 8;
+        var height = Math.max(180, timelineRect.top - mainRect.top - top + 8);
+        var x0 = startRect.left + startRect.width / 2 - mainRect.left;
+        var x1 = timelineRect.left + timelineRect.width / 2 - mainRect.left;
+        bridge.style.top = top + 'px';
+        bridge.style.width = width + 'px';
+        bridge.style.height = height + 'px';
+        bridge.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+        path.setAttribute('d', 'M ' + x0 + ' 0 C ' + (width * 0.78) + ' ' + (height * 0.12) + ', ' + (width * 0.76) + ' ' + (height * 0.28) + ', ' + (width * 0.56) + ' ' + (height * 0.34) + ' C ' + (width * 0.27) + ' ' + (height * 0.43) + ', ' + (width * 0.28) + ' ' + (height * 0.66) + ', ' + (width * 0.55) + ' ' + (height * 0.72) + ' C ' + (width * 0.72) + ' ' + (height * 0.78) + ', ' + (width * 0.63) + ' ' + (height * 0.94) + ', ' + x1 + ' ' + height);
+      }
+      function queueLayout() {
+        if (!queued) { queued = true; requestAnimationFrame(layoutBridge); }
+      }
+      queueLayout();
+      window.addEventListener('resize', queueLayout, { passive: true });
+      window.addEventListener('load', queueLayout, { once: true });
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(queueLayout);
+    })();
+
     // Section labels light up as they scroll into the top band, then dim again
     (function () {
       var labels = document.querySelectorAll('.eyebrow');
@@ -544,10 +581,12 @@
 
       var dpr = 1, cssW = 0, cssH = 0;
       var head = { x: 0, y: 0 }, targetY = 0, prevY = 0, prevX = 0;
-      var parts = [], running = false, t0 = performance.now();
+      var parts = [], running = false, inView = false, resizeQueued = false, lastLitY = -999;
+      var t0 = performance.now();
 
       function resize() {
-        dpr = Math.max(1, Math.min(2.5, window.devicePixelRatio || 1));   // crisper on hi-DPI
+        resizeQueued = false;
+        dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
         cssW = document.documentElement.clientWidth;   // full viewport width: true edge-to-edge travel
         cssH = timeline.offsetHeight;            // list height (canvas is absolute, no feedback)
         canvas.style.width = cssW + 'px';
@@ -556,13 +595,16 @@
         canvas.height = Math.round(cssH * dpr);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
+      function queueResize() {
+        if (!resizeQueued) { resizeQueued = true; requestAnimationFrame(resize); }
+      }
       // symmetric sweep centered at width/2, sized against the card column:
       // the comet rides behind the cards but swings ~110px past their edges
       // at each extreme, peeking out for a moment before tucking back in.
       var SAFE = 60;
-      function pathX(y, t) {
+      function pathX(y) {
         var amp = Math.max(160, Math.min(cssW / 2 - SAFE, timeline.offsetWidth / 2 + 50));
-        return cssW / 2 + Math.sin(y * 0.005 + t * 0.3) * amp;
+        return cssW / 2 + Math.sin(y * 0.005) * amp;
       }
       function computeTarget() {
         var rect = timeline.getBoundingClientRect();
@@ -570,6 +612,8 @@
         targetY = Math.max(0, Math.min(cssH, vh * 0.5 - rect.top));
       }
       function litNodes(y) {
+        if (Math.abs(y - lastLitY) < 4) return;
+        lastLitY = y;
         items.forEach(function (it) {
           var dot = it.querySelector('.tl-dot');
           var c = it.offsetTop + (dot ? dot.offsetTop + dot.offsetHeight / 2 : 0);
@@ -582,7 +626,7 @@
       // faint slow violet clouds / blue core streaks / bright fast-dying sparks.
       // Strong negative vy = heavy upward atmospheric drag on everything shed.
       function spawnOne(x, y, speed, hvx) {
-        if (parts.length > 900) return;
+        if (parts.length > 480) return;
         var kind = Math.random();
         if (kind < 0.22) {
           parts.push({
@@ -611,7 +655,7 @@
       // burning out while dragging their own blue/violet mini-tails
       var frags = [];
       function spawnFrag(x, y, hvx) {
-        if (frags.length > 14) return;
+        if (frags.length > 8) return;
         var side = Math.random() < 0.5 ? -1 : 1;
         frags.push({
           x: x, y: y,
@@ -635,7 +679,7 @@
         var hvx = head.x - prevX; prevX = head.x;
         litNodes(head.y);
 
-        var emit = Math.min(14, 5 + Math.floor((speed + Math.abs(hvx)) * 1.2));
+        var emit = Math.min(8, 3 + Math.floor((speed + Math.abs(hvx)) * 0.75));
         for (var e = 0; e < emit; e++) spawnOne(head.x, head.y, speed, hvx);
         if (Math.random() < 0.06 + Math.min(0.2, speed * 0.04)) spawnFrag(head.x, head.y, hvx);
 
@@ -682,7 +726,7 @@
           var f = frags[k];
           f.x += f.vx; f.y += f.vy; f.vx *= 0.99; f.vy *= 0.988; f.life -= f.decay;
           if (f.life <= 0) { frags.splice(k, 1); continue; }
-          if (parts.length < 890) {
+          if (parts.length < 470) {
             parts.push({
               x: f.x, y: f.y,
               vx: -f.vx * 0.25 + (Math.random() - 0.5) * 0.3, vy: -0.35 - Math.random() * 0.3,
@@ -749,10 +793,10 @@
       function stop() { running = false; }
 
       resize();
-      window.addEventListener('resize', resize);
-      window.addEventListener('load', resize);
-      if (window.ResizeObserver) { new ResizeObserver(resize).observe(timeline); }
-      if (document.fonts && document.fonts.ready) { document.fonts.ready.then(resize); }
+      window.addEventListener('resize', queueResize, { passive: true });
+      window.addEventListener('load', queueResize, { once: true });
+      if (window.ResizeObserver) { new ResizeObserver(queueResize).observe(timeline); }
+      if (document.fonts && document.fonts.ready) { document.fonts.ready.then(queueResize); }
       window.__comet = function () { return { y: Math.round(head.y), target: Math.round(targetY), parts: parts.length, w: cssW, h: cssH }; };
 
       if (prefersReduced) {
@@ -763,8 +807,11 @@
         return;
       }
       if ('IntersectionObserver' in window) {
-        new IntersectionObserver(function (es) { es.forEach(function (en) { en.isIntersecting ? start() : stop(); }); }, { threshold: 0 }).observe(timeline);
-      } else { start(); }
+        new IntersectionObserver(function (es) {
+          es.forEach(function (en) { inView = en.isIntersecting; if (inView && !document.hidden) start(); else stop(); });
+        }, { threshold: 0 }).observe(timeline);
+      } else { inView = true; start(); }
+      document.addEventListener('visibilitychange', function () { if (inView && !document.hidden) start(); else stop(); });
     })();
 
     // Mobile/tablet only: neon "focus" glow on the experience card crossing
@@ -812,10 +859,13 @@
       track.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(function () { refresh(); ticking = false; }); } }, { passive: true });
       refresh();
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        var paused = false;
-        setInterval(function () { if (!paused) move(1); }, 7000);
+        var paused = false, visible = false;
+        setInterval(function () { if (!paused && visible && !document.hidden) move(1); }, 7000);
         ['pointerenter', 'pointerdown', 'focusin'].forEach(function (e) { car.addEventListener(e, function () { paused = true; }, { passive: true }); });
         ['pointerup', 'pointerleave', 'focusout'].forEach(function (e) { car.addEventListener(e, function () { paused = false; }, { passive: true }); });
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; }, { threshold: 0.1 }).observe(car);
+        } else { visible = true; }
       }
     })();
 
