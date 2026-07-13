@@ -335,6 +335,19 @@ a.dp-name:hover { color: var(--blue); }
 .sample__title { font-family: var(--serif); font-weight: 600; font-size: 1.5rem; line-height: 1.14; margin-bottom: 0.7rem; }
 .sample__body { color: var(--ink-soft); font-size: 0.97rem; }
 .samples__cta { justify-content: center; margin-top: 1.5rem; }
+.case-study-spotlight {
+  display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center; margin-top: 1.5rem; padding: clamp(1.5rem, 4vw, 2.7rem);
+  border-color: rgba(143,205,238,0.65); box-shadow: 0 22px 56px rgba(40,110,160,0.14), var(--tile-inset);
+}
+.case-study-spotlight__eyebrow { display: block; color: var(--blue); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase; margin-bottom: 0.65rem; }
+.case-study-spotlight h3 { font-family: var(--serif); font-size: clamp(1.6rem, 3.4vw, 2.35rem); line-height: 1.12; max-width: 20ch; }
+.case-study-spotlight__copy p { color: var(--ink-soft); max-width: 54ch; margin: 0.8rem 0 1.2rem; }
+.case-study-spotlight__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; }
+.case-study-spotlight__list li { min-width: 0; padding: 1rem; border-radius: 15px; background: rgba(143,205,238,0.12); border: 1px solid rgba(143,205,238,0.34); }
+.case-study-spotlight__list span { display: block; color: var(--sky-deep); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; margin-bottom: 0.45rem; }
+.case-study-spotlight__list strong { display: block; font-family: var(--serif); font-size: 1rem; line-height: 1.2; }
+.case-study-spotlight__list small { display: block; color: var(--ink-soft); font-size: 0.74rem; line-height: 1.4; margin-top: 0.3rem; }
 
 /* ---------- positioning and messaging case studies ---------- */
 .case-page { overflow: clip; }
@@ -508,6 +521,7 @@ a.dp-name:hover { color: var(--blue); }
   .case-header { align-items: flex-start; }
   .case-hero { padding-top: 3.5rem; }
   .message-flow, .case-study__grid, .attribution-grid { grid-template-columns: 1fr; }
+  .case-study-spotlight { grid-template-columns: 1fr; }
   .message-flow > div { min-height: 0; }
   .audience-grid { grid-template-columns: repeat(2, 1fr); }
   .case-actions li { grid-template-columns: 5.5rem 1fr; }
@@ -572,6 +586,7 @@ a.dp-name:hover { color: var(--blue); }
   .case-study__outcome { grid-column: 1; }
   .case-actions li { grid-template-columns: 1fr; gap: 0.2rem; }
   .activation-result { align-items: flex-start; flex-direction: column; }
+  .case-study-spotlight__list { grid-template-columns: 1fr; }
 }
 
 /* ---------- reduced motion ---------- */
