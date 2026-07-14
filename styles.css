@@ -94,6 +94,14 @@ body::before {
   border-bottom: 1.5px solid transparent; transition: color 0.2s ease, border-color 0.2s ease;
 }
 .site-nav a:hover { color: var(--ink); border-color: var(--sky); }
+.site-nav .case-home {
+  align-self: center; padding: 0.5rem 0.9rem; margin: -0.45rem 0; border: 1px solid var(--navy); border-radius: 999px;
+  background: var(--navy); color: #fff; font-weight: 700; box-shadow: 0 5px 14px rgba(20,48,76,0.18);
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.site-nav .case-home:hover {
+  background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 7px 18px rgba(47,127,179,0.25); transform: translateY(-1px);
+}
 
 /* ---------- shared layout ---------- */
 .hero, .section, .site-footer { padding-left: var(--gutter); padding-right: var(--gutter); }
