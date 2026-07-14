@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=37" />
+  <link rel="stylesheet" href="styles.css?v=38" />
 </head>
 <body>
   <header class="site-header case-header">
@@ -35,8 +35,8 @@
     <section class="case-hero" id="overview">
       <p class="kicker">Positioning and messaging at Aisepedia</p>
       <h1 class="case-hero__title">The work behind the words.</h1>
-      <p class="case-hero__lede">I helped position Aisepedia as the first Product Marketing Environment, then carried that idea through homepage messaging, audience use cases, customer proof, and lifecycle engagement.</p>
-      <p class="case-hero__context">The work was grounded in direct research with senior product marketing leaders and connected to a broader go-to-market motion. This page separates what the messaging changed from the business results it supported.</p>
+      <p class="case-hero__lede">I helped position Aisepedia as the first Product Marketing Environment and carried that story from category to homepage to customer proof to lifecycle activation.</p>
+      <p class="case-hero__context">Grounded in research with senior product marketing leaders. Connected to real pipeline and customer outcomes. This page separates what the messaging changed from the business results it supported.</p>
       <div class="case-hero__actions">
         <a class="btn btn--primary" href="#cases">Read the case studies</a>
         <a class="btn" href="mailto:aatif.recruitment@gmail.com">Ask me about the work</a>
@@ -75,7 +75,7 @@
           <span class="case-study__number">01</span>
           <div>
             <p class="case-study__label">Category positioning</p>
-            <h2>Creating the Product Marketing Environment category</h2>
+            <h2>Helped create the Product Marketing Environment category</h2>
           </div>
           <span class="case-study__outcome">From generic AI to a distinct system</span>
         </header>
@@ -87,10 +87,10 @@
           <section>
             <h3>What I did</h3>
             <ol class="case-actions">
-              <li><span>Category</span>Helped define and operationalize Product Marketing Environment as the product category.</li>
-              <li><span>Hierarchy</span>Built the story from market research and ICP selection through positioning, messaging, and execution.</li>
-              <li><span>Differentiation</span>Contrasted connected PMM memory, frameworks, and system sync with one-off AI outputs.</li>
-              <li><span>Point of view</span>Kept the product marketer as the central actor and Aisepedia as the environment supporting better decisions.</li>
+              <li><span>Defined</span>Helped define and operationalize Product Marketing Environment as the product category.</li>
+              <li><span>Built</span>Built the story from market research and ICP selection through positioning, messaging, and execution.</li>
+              <li><span>Contrasted</span>Contrasted connected PMM memory, frameworks, and system sync with one-off AI outputs.</li>
+              <li><span>Centered</span>Kept the product marketer as the central actor and Aisepedia as the environment supporting better decisions.</li>
             </ol>
           </section>
         </div>
@@ -113,7 +113,7 @@
           <span class="case-study__number">02</span>
           <div>
             <p class="case-study__label">Homepage and use cases</p>
-            <h2>Turning customer research into audience-specific messaging</h2>
+            <h2>Turned customer research into audience-specific messaging</h2>
           </div>
           <span class="case-study__outcome">From broad promise to four buyer problems</span>
         </header>
@@ -147,7 +147,7 @@
           <span class="case-study__number">03</span>
           <div>
             <p class="case-study__label">Customer evidence</p>
-            <h2>Building proof for an unfamiliar category</h2>
+            <h2>Built proof for a category with no inherited credibility</h2>
           </div>
           <span class="case-study__outcome">From product claims to practitioner validation</span>
         </header>
@@ -159,9 +159,9 @@
           <section>
             <h3>What I did</h3>
             <ol class="case-actions">
-              <li><span>Program</span>Built the design-partner motion around “Built with you, not just for you.”</li>
-              <li><span>Evidence</span>Converted feedback into named, attributable testimonials tied to specific product claims.</li>
-              <li><span>Advocacy</span>Moved selected partners into public proof, panels, community programming, and customer conversations.</li>
+              <li><span>Built</span>Built the design-partner motion around “Built with you, not just for you.”</li>
+              <li><span>Converted</span>Converted feedback into named, attributable testimonials tied to specific product claims.</li>
+              <li><span>Activated</span>Moved selected partners into public proof, panels, community programming, and customer conversations.</li>
             </ol>
           </section>
         </div>
@@ -182,7 +182,7 @@
           <span class="case-study__number">04</span>
           <div>
             <p class="case-study__label">Activation and lifecycle</p>
-            <h2>Extending messaging into product activation</h2>
+            <h2>Extended messaging into the product and measured it</h2>
           </div>
           <span class="case-study__outcome case-study__outcome--direct">Direct measured result</span>
         </header>
@@ -194,10 +194,10 @@
           <section>
             <h3>What I did</h3>
             <ol class="case-actions">
-              <li><span>Instrumentation</span>Defined an eight-stage conversion funnel and 11 acquisition and activation events.</li>
-              <li><span>Lifecycle</span>Built five demo, onboarding, and re-engagement touches around observed behavior.</li>
-              <li><span>Recovery</span>Mapped 12 abandonment stages to targeted messages and product interventions.</li>
-              <li><span>Iteration</span>Used drop-off data to inform onboarding changes and recovery priorities.</li>
+              <li><span>Defined</span>Defined an eight-stage conversion funnel and 11 acquisition and activation events.</li>
+              <li><span>Built</span>Built five demo, onboarding, and re-engagement touches around observed behavior.</li>
+              <li><span>Mapped</span>Mapped 12 abandonment stages to targeted messages and product interventions.</li>
+              <li><span>Iterated</span>Used drop-off data to inform onboarding changes and recovery priorities.</li>
             </ol>
           </section>
         </div>
@@ -259,6 +259,47 @@
         if (target) { event.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
       });
     });
+
+    (function () {
+      var studies = Array.prototype.slice.call(document.querySelectorAll('.case-study'));
+      var frameRequested = false;
+
+      if (!studies.length) return;
+
+      function updateFocusedStudy() {
+        var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        var viewportCenter = viewportHeight * 0.5;
+        var closestStudy = null;
+        var closestDistance = Infinity;
+
+        studies.forEach(function (study) {
+          var bounds = study.getBoundingClientRect();
+          if (bounds.bottom <= 0 || bounds.top >= viewportHeight) return;
+
+          var studyCenter = bounds.top + (bounds.height * 0.5);
+          var distance = Math.abs(studyCenter - viewportCenter);
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestStudy = study;
+          }
+        });
+
+        studies.forEach(function (study) {
+          study.classList.toggle('is-focus', study === closestStudy);
+        });
+        frameRequested = false;
+      }
+
+      function requestFocusUpdate() {
+        if (frameRequested) return;
+        frameRequested = true;
+        window.requestAnimationFrame(updateFocusedStudy);
+      }
+
+      window.addEventListener('scroll', requestFocusUpdate, { passive: true });
+      window.addEventListener('resize', requestFocusUpdate, { passive: true });
+      requestFocusUpdate();
+    })();
   </script>
 </body>
 </html>
