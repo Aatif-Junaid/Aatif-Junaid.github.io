@@ -649,3 +649,29 @@ a.dp-name:hover { color: var(--blue); }
   .tile:hover, .btn:hover, .metric:hover, .tools li:hover, a.logo-chip:hover, .footer-linkedin:hover { transform: none; }
   .metric .mi { opacity: 0.92; animation: none !important; }
 }
+
+/* ---------- keyboard focus (WCAG 2.4.7 Focus Visible) ---------- */
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.btn:focus-visible, a.logo-chip:focus-visible, .dp-arrow:focus-visible,
+.footer-linkedin:focus-visible, .event-strip:focus-visible, .reports__summary:focus-visible {
+  outline: 3px solid var(--blue-deep);
+  outline-offset: 4px;
+}
+/* fallback for engines without :focus-visible support */
+@supports not selector(:focus-visible) {
+  a:focus, button:focus, summary:focus { outline: 3px solid var(--blue); outline-offset: 3px; }
+}
+
+/* skip link: lets keyboard users jump past the nav (WCAG 2.4.1) */
+.skip-link {
+  position: absolute; top: 0.5rem; left: 50%; z-index: 100;
+  transform: translateX(-50%) translateY(-250%);
+  padding: 0.6rem 1.15rem; border-radius: 999px;
+  background: var(--blue-deep); color: #fff; font-size: 0.85rem; font-weight: 600;
+  transition: transform 0.2s ease;
+}
+.skip-link:focus { transform: translateX(-50%) translateY(0); }
