@@ -101,7 +101,7 @@ body::before {
   transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 .site-nav .case-home:hover {
-  background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 7px 18px rgba(47,127,179,0.25); transform: translateY(-1px);
+  background: var(--blue-text); border-color: var(--blue-text); color: #fff; box-shadow: 0 7px 18px rgba(47,127,179,0.25); transform: translateY(-1px);
 }
 
 /* ---------- shared layout ---------- */
@@ -110,12 +110,17 @@ body::before {
 /* ---------- hero ---------- */
 .hero { max-width: var(--maxw); margin: 0 auto; padding-top: clamp(3.5rem, 9vw, 6.5rem); padding-bottom: clamp(2rem, 5vw, 3.5rem); text-align: center; }
 .kicker { font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue-deep); font-weight: 600; margin-bottom: 1.1rem; }
+/* Display name: heavier weight, a hairline outline for definition against the
+   paper, and a layered glow (tight highlight + wide aura + a grounding shadow). */
 .hero__name {
-  font-family: var(--serif); font-weight: 700;
-  font-size: clamp(2.7rem, 8vw, 5.6rem); line-height: 1.1; letter-spacing: -0.01em; padding-bottom: 0.1em;
+  font-family: var(--serif); font-weight: 800;
+  font-size: clamp(2.8rem, 8.4vw, 6rem); line-height: 1.1; letter-spacing: -0.015em; padding-bottom: 0.1em;
   background: linear-gradient(110deg, var(--blue-deep) 0%, var(--blue) 42%, var(--sky-deep) 72%, var(--blue) 100%);
   background-size: 220% auto; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 16px rgba(80, 170, 240, 0.30));   /* faint neon-blue aura */
+  -webkit-text-stroke: 0.6px rgba(31, 85, 117, 0.32);       /* hairline outline, keeps edges crisp over the glow */
+  filter: drop-shadow(0 0 6px rgba(143, 205, 238, 0.55))    /* tight highlight */
+          drop-shadow(0 0 26px rgba(47, 127, 179, 0.42))    /* wide neon-blue aura */
+          drop-shadow(0 3px 2px rgba(31, 44, 73, 0.18));    /* grounds it on the paper */
   animation: shimmer 9s ease-in-out infinite;
 }
 @keyframes shimmer { 0% { background-position: 0% center; } 50% { background-position: 100% center; } 100% { background-position: 0% center; } }
@@ -129,14 +134,6 @@ body::before {
 .hero__statement strong { margin-top: 0.16em; }
 .hero__statement strong { font-style: normal; font-weight: 700; color: var(--blue-deep); }
 .hero__actions { justify-content: center; }
-.product-skill-band {
-  max-width: 64rem; margin: 1.5rem auto 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.55rem;
-}
-.product-skill-band li {
-  min-width: 0; padding: 0.62rem 0.75rem; border: 1px solid rgba(143,205,238,0.44); border-radius: 999px;
-  background: rgba(255,255,255,0.48); color: var(--blue-deep); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.035em;
-  box-shadow: 0 7px 18px rgba(40,70,95,0.06);
-}
 
 /* buttons */
 .hero__actions, .contact__actions, .samples__cta { display: flex; flex-wrap: wrap; gap: 0.8rem; }
@@ -147,7 +144,8 @@ body::before {
   transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(40, 110, 160, 0.2); }
-.btn--primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+/* --blue-text, not --blue: white on #2f7fb3 is 4.37:1 and fails AA. */
+.btn--primary { background: var(--blue-text); color: #fff; border-color: var(--blue-text); }
 .btn--primary:hover { background: var(--blue-deep); border-color: var(--blue-deep); }
 .btn:not(.btn--primary):hover { border-color: var(--blue); color: var(--blue-deep); }
 
@@ -524,7 +522,7 @@ a.dp-name:hover { color: var(--blue-text); }
 .site-footer__note { margin: 0; font-style: italic; font-size: 0.78rem; color: var(--ink-soft); opacity: 0.85; }
 .footer-linkedin { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--blue-deep); padding: 0.4rem 0.8rem; border: 1px solid var(--line-strong); border-radius: 999px; transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, border-color 0.2s ease; }
 .footer-linkedin svg { width: 18px; height: 18px; }
-.footer-linkedin:hover { background: var(--blue); color: #fff; border-color: var(--blue); transform: translateY(-2px); }
+.footer-linkedin:hover { background: var(--blue-text); color: #fff; border-color: var(--blue-text); transform: translateY(-2px); }
 
 /* ---------- reveal / fade-in-up + light stagger ---------- */
 .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.75s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.75s cubic-bezier(0.2, 0.7, 0.2, 1); }
@@ -566,7 +564,6 @@ a.dp-name:hover { color: var(--blue-text); }
   .section-title { font-size: clamp(1.45rem, 5.5vw, 1.85rem); }
   .case-header { align-items: flex-start; }
   .case-hero { padding-top: 3.5rem; }
-  .product-skill-band { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .message-flow, .case-study__grid, .attribution-grid { grid-template-columns: 1fr; }
   .case-study-spotlight { grid-template-columns: 1fr; }
   .message-flow > div { min-height: 0; }
