@@ -58,7 +58,9 @@
   <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=45" />
+  <link rel="stylesheet" href="styles.css?v=46" />
+  <!-- Without JS the reveal observer never runs, so make sure nothing stays invisible. -->
+  <noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
 </head>
 <body>
 
@@ -81,7 +83,7 @@
       <a href="#experience">Experience</a>
       <a href="#education">Education</a>
       <a href="#samples">Go-to-market</a>
-      <a href="case-studies.html">Case Studies</a>
+      <a class="nav-page" href="case-studies.html">Case Studies<span class="nav-page__arrow" aria-hidden="true">&#8599;</span></a>
       <a href="#thinking">Approach</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -143,7 +145,7 @@
               <li>Co-built a 27-member design partner program (18 at Director, VP, or SVP level across Atlassian, Splunk, and Taboola) through 32 discovery sessions, opening a direct channel between enterprise buyers, GTM, and product.</li>
               <li>30+ enterprise sales conversations supported with competitive battle cards and objection handling, helping the field differentiate the product and answer buyer resistance.</li>
               <li>Built an AI-assisted marketing operating system in n8n, HubSpot, and Calendly triggers for lead follow-up and lifecycle, with 22 KPIs across acquisition and activation.</li>
-              <li>Ran the LinkedIn and outbound demand motion, 1,000 targeted reach-outs into a six-week funnel, and cut early-stage abandonment 24% with instrumentation in Mixpanel and PostHog.</li>
+              <li>1,000 targeted reach-outs pushed through a six-week LinkedIn and outbound funnel, and early-stage abandonment cut 24% with instrumentation in Mixpanel and PostHog.</li>
             </ul>
 
             <div class="metrics" aria-label="Aisepedia results">
@@ -275,7 +277,7 @@
             <div>
               <div class="tl-date">Aug 2022 to May 2024</div>
               <p class="tl-gaptext"><strong>STEM MBA, American University (Kogod School of Business)</strong></p>
-              <p class="tl-gaptext">Graduate Research Associate, Mar 2023 to Jun 2024. Research with Prof. Mark Clark on how leadership and organizational design shifted through COVID, structuring and analyzing interview data in NVIVO and Python, and building the codebook the research team worked from.</p>
+              <p class="tl-gaptext">Graduate Research Associate, Mar 2023 to Jun 2024. I researched how leadership and organizational design shifted through COVID with Prof. Mark Clark, structured and analyzed the interview data in NVivo and Python, and built the codebook the research team worked from.</p>
             </div>
           </div>
         </li>
@@ -298,7 +300,7 @@
 
             <ul class="tl-points">
               <li>$473K in YoY revenue recovered by rebuilding Salesforce contract workflows and running renewal audits across 80+ enterprise accounts, closing booking discrepancies with validation logic and pipeline governance.</li>
-              <li>105% of the Q1 2022 target hit and 18% growth in major prospects, partnering with sales leadership on territory design, quota capacity, and performance tracking.</li>
+              <li>105% of the Q1 2022 target hit and 18% growth in major prospects, from partnering with sales leadership on territory design, quota capacity, and performance tracking.</li>
               <li>Ran competitive and market analysis on the data-center virtualization portfolio and fed it into enablement, sharpening how the field positioned against established hypervisor and storage vendors.</li>
             </ul>
 
@@ -327,7 +329,7 @@
             <p class="tl-desc">EnCloudEn built hyperconverged infrastructure software for enterprise data centers. Quantum Corporation acquired the company in 2021.</p>
 
             <ul class="tl-points">
-              <li>Sold infrastructure to enterprise IT buyers who evaluated on architecture, not pitch, and built the solution demos, technical documentation, and sales training that made the product explainable without an engineer in the room.</li>
+              <li>Sold infrastructure to enterprise IT buyers who evaluated on architecture rather than pitch, building the solution demos, technical documentation, and sales training that made the product explainable without an engineer in the room.</li>
               <li>Influenced the product roadmap by translating enterprise requirements into technical specifications and structuring proposals around them, feeding customer signal back to engineering through to the Quantum acquisition.</li>
               <li>Ran competitive and market analysis that shaped positioning and differentiation against established virtualization vendors.</li>
             </ul>
@@ -359,7 +361,7 @@
 
             <div class="metrics" aria-label="Peepal results">
               <div class="metric metric--users"><span class="mi"><svg><use href="#ic-users"/></svg></span><span class="metric__num">56</span><span class="metric__label">Clients owned</span></div>
-              <div class="metric metric--up"><span class="mi"><svg><use href="#ic-up"/></svg></span><span class="metric__num">76%</span><span class="metric__label">Engagement lift</span></div>
+              <div class="metric metric--up"><span class="mi"><svg><use href="#ic-up"/></svg></span><span class="metric__num">76%</span><span class="metric__label">Digital reach growth</span></div>
               <div class="metric metric--win"><span class="mi"><svg><use href="#ic-win"/></svg></span><span class="metric__num">Award</span><span class="metric__label">Peepal Centennial</span></div>
             </div>
           </div>
@@ -518,7 +520,7 @@
     <section class="section section--contact" id="contact">
       <div class="section-head reveal">
         <span class="eyebrow">Contact</span>
-        <h2 class="section-title">The story, the stage, and the pipeline are one system.</h2>
+        <h2 class="section-title">Positioning, pipeline, and revenue are one system.</h2>
       </div>
 
       <div class="tile contact-tile reveal">
@@ -526,7 +528,7 @@
           <img class="contact-photo" src="assets/headshot.jpg?v=2" alt="Aatif Junaid Mulla" width="100" height="100" loading="lazy" decoding="async" />
           <div class="contact-bubble">
             <p class="contact__lead">
-              I build go-to-market for technical products sold to expert buyers, from the first conversation through to signed revenue. Always glad to compare notes with people building the same thing.
+              I build go-to-market for technical products sold to expert buyers. Tell me what you are building.
             </p>
             <p class="contact__joke">I answer my own inbox. The AI agents can wait.</p>
           </div>
@@ -895,11 +897,15 @@
     if (prefersReduced || !('IntersectionObserver' in window)) {
       revealEls.forEach(function (el) { el.classList.add('is-visible'); });
     } else {
+      // threshold 0 so tall cards fire the moment any edge enters (a 12% threshold
+      // on an 800px card meant ~100px of blank scrolling first), and a positive
+      // bottom margin starts the fade just before the element reaches the viewport,
+      // so content is already settled by the time it is on screen.
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) { entry.target.classList.add('is-visible'); io.unobserve(entry.target); }
         });
-      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      }, { threshold: 0, rootMargin: '0px 0px 15% 0px' });
       revealEls.forEach(function (el) { io.observe(el); });
     }
   </script>

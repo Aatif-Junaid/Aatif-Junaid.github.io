@@ -103,6 +103,17 @@ body::before {
 .site-nav .case-home:hover {
   background: var(--blue-text); border-color: var(--blue-text); color: #fff; box-shadow: 0 7px 18px rgba(47,127,179,0.25); transform: translateY(-1px);
 }
+/* Case Studies leaves the page, so it reads as a destination, not a jump link. */
+.site-nav .nav-page {
+  display: inline-flex; align-items: center; gap: 0.3rem; align-self: center;
+  padding: 0.34rem 0.75rem; margin: -0.34rem 0; border: 1px solid var(--line-strong);
+  border-radius: 999px; background: rgba(255, 255, 255, 0.6); color: var(--ink); font-weight: 600;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+.site-nav .nav-page:hover {
+  color: var(--blue-text); border-color: var(--sky-deep); background: rgba(143, 205, 238, 0.22); transform: translateY(-1px);
+}
+.nav-page__arrow { font-size: 0.92em; line-height: 1; color: var(--blue-text); }
 
 /* ---------- shared layout ---------- */
 .hero, .section, .site-footer { padding-left: var(--gutter); padding-right: var(--gutter); }
@@ -110,17 +121,18 @@ body::before {
 /* ---------- hero ---------- */
 .hero { max-width: var(--maxw); margin: 0 auto; padding-top: clamp(3.5rem, 9vw, 6.5rem); padding-bottom: clamp(2rem, 5vw, 3.5rem); text-align: center; }
 .kicker { font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue-deep); font-weight: 600; margin-bottom: 1.1rem; }
-/* Display name: heavier weight, a hairline outline for definition against the
-   paper, and a layered glow (tight highlight + wide aura + a grounding shadow). */
+/* Display name: bold and luminous rather than heavy. No dark outline or drop
+   shadow (they read as muddy against the paper); the weight plus a bright
+   two-layer glow carries it. Gradient starts at --blue, not --blue-deep. */
 .hero__name {
   font-family: var(--serif); font-weight: 800;
   font-size: clamp(2.8rem, 8.4vw, 6rem); line-height: 1.1; letter-spacing: -0.015em; padding-bottom: 0.1em;
-  background: linear-gradient(110deg, var(--blue-deep) 0%, var(--blue) 42%, var(--sky-deep) 72%, var(--blue) 100%);
+  /* #3585bd, not --sky-deep: sky-deep is only 2.47:1 on paper and fails AA even
+     for large text. This reads as the same lift in the shimmer at 3.4:1. */
+  background: linear-gradient(110deg, var(--blue) 0%, var(--blue) 26%, #3585bd 62%, var(--blue) 100%);
   background-size: 220% auto; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
-  -webkit-text-stroke: 0.6px rgba(31, 85, 117, 0.32);       /* hairline outline, keeps edges crisp over the glow */
-  filter: drop-shadow(0 0 6px rgba(143, 205, 238, 0.55))    /* tight highlight */
-          drop-shadow(0 0 26px rgba(47, 127, 179, 0.42))    /* wide neon-blue aura */
-          drop-shadow(0 3px 2px rgba(31, 44, 73, 0.18));    /* grounds it on the paper */
+  filter: drop-shadow(0 0 9px rgba(143, 205, 238, 0.62))    /* tight highlight */
+          drop-shadow(0 0 30px rgba(79, 159, 212, 0.42));   /* wide sky-blue aura */
   animation: shimmer 9s ease-in-out infinite;
 }
 @keyframes shimmer { 0% { background-position: 0% center; } 50% { background-position: 100% center; } 100% { background-position: 0% center; } }
@@ -525,7 +537,7 @@ a.dp-name:hover { color: var(--blue-text); }
 .footer-linkedin:hover { background: var(--blue-text); color: #fff; border-color: var(--blue-text); transform: translateY(-2px); }
 
 /* ---------- reveal / fade-in-up + light stagger ---------- */
-.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.75s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.75s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
 .reveal.is-visible { opacity: 1; transform: none; }
 .edu-grid .reveal:nth-child(2), .sample-grid .reveal:nth-child(2), .framework-grid .reveal:nth-child(2) { transition-delay: 0.08s; }
 .edu-grid .reveal:nth-child(3), .sample-grid .reveal:nth-child(3), .framework-grid .reveal:nth-child(3) { transition-delay: 0.16s; }
