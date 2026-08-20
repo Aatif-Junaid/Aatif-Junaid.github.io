@@ -247,6 +247,9 @@ a.logo-chip:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 9px 2
 .tl-lead { font-size: 1.05rem; line-height: 1.6; margin-bottom: 1rem; max-width: 64ch; }
 .tl-points { display: grid; gap: 0.6rem; margin-bottom: 1.4rem; }
 .tl-points li { position: relative; padding-left: 1.1rem; color: var(--ink-soft); }
+/* Readability: the timeline card runs to 1380px, which pushed body copy to about
+   97 characters per line. Cap the measure without narrowing the tiles themselves. */
+.tl-desc, .tl-points li { max-width: 76ch; }
 .tl-points li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 6px; height: 6px; border-radius: 50%; background: var(--sky); box-shadow: 0 0 0 2px rgba(47, 127, 179, 0.25); }
 
 /* metrics with tiny animated icons */
@@ -607,7 +610,21 @@ a.dp-name:hover { color: var(--blue-text); }
   .tool-group, .framework { flex: 0 0 80%; min-width: 80%; scroll-snap-align: start; }
 
   /* touch targets: minimum 44px */
-  .site-nav { gap: 0.3rem 1rem; flex-wrap: wrap; justify-content: flex-end; }
+  /* Compact sticky bar. Six wrapping links stacked the header to 220px, 28% of a
+     320px screen, while stuck to the top. The wordmark keeps its own row and the
+     nav becomes one horizontally scrollable row, matching how .tool-groups and
+     .framework-grid already scroll on mobile. */
+  .site-header { flex-wrap: wrap; row-gap: 0.3rem; padding-top: 0.55rem; padding-bottom: 0.55rem; }
+  .wordmark { font-size: 0.9rem; }
+  .site-nav {
+    flex: 1 0 100%; min-width: 0; flex-wrap: nowrap; overflow-x: auto;
+    justify-content: flex-start; gap: 1rem;
+    scrollbar-width: none; -ms-overflow-style: none;
+    scroll-snap-type: x proximity;
+    margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter);
+  }
+  .site-nav::-webkit-scrollbar { display: none; }
+  .site-nav a { flex: 0 0 auto; white-space: nowrap; scroll-snap-align: start; }
   .site-nav a, .btn, .contact-list a, .footer-linkedin { min-height: 44px; display: inline-flex; align-items: center; }
   .site-nav a { min-width: 44px; justify-content: center; }
   .tl-link, a.dp-name { min-height: 44px; display: inline-flex; align-items: center; }
