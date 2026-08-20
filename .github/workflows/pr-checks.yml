@@ -1,0 +1,41 @@
+# Runs on pull requests only. It never writes to the repository and never
+# deploys; it exists so a change to the site has to pass automated checks
+# before a human merges it.
+#
+# NOTE: this workflow does nothing to stop a direct push to main. That
+# requires branch protection / a ruleset configured in GitHub settings.
+# See docs/DEPLOYMENT.md.
+name: PR checks
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read          # least privilege: read-only, cannot push or deploy
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Site integrity checks
+        run: python scripts/check_site.py
+
+      - name: Verify CNAME is unchanged
+        run: |
+          test "$(cat CNAME)" = "aatifmulla.me" \
+            || { echo "CNAME must remain aatifmulla.me"; exit 1; }
+
+      - name: Warn on oversized assets
+        run: |
+          big=$(find . -path ./.git -prune -o -type f -size +500k -print)
+          if [ -n "$big" ]; then
+            echo "::warning::Files over 500KB (slows first paint):"
+            echo "$big"
+          fi

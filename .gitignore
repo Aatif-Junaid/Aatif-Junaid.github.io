@@ -9,3 +9,21 @@ HANDOFF.md
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Credentials and secrets: never commit these to a public repo
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.ppk
+id_rsa
+id_ed25519
+credentials
+credentials.*
+secrets.*
+service-account*.json
+.netrc
+.npmrc
