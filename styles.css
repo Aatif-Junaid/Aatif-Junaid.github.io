@@ -615,7 +615,10 @@ a.dp-name:hover { color: var(--blue-text); }
      nav becomes one horizontally scrollable row, matching how .tool-groups and
      .framework-grid already scroll on mobile. */
   .site-header { flex-wrap: wrap; row-gap: 0.3rem; padding-top: 0.55rem; padding-bottom: 0.55rem; }
-  .wordmark { font-size: 0.9rem; }
+  /* 44px tap target. At 0.9rem the wordmark box was 23px tall, under the 24px
+     WCAG 2.2 AA minimum for Target Size, and it is a real link (LinkedIn on the
+     home page, back to home elsewhere). */
+  .wordmark { font-size: 0.9rem; min-height: 44px; display: inline-flex; align-items: center; }
   .site-nav {
     flex: 1 0 100%; min-width: 0; flex-wrap: nowrap; overflow-x: auto;
     justify-content: flex-start; gap: 1rem;
@@ -694,6 +697,7 @@ a.dp-name:hover { color: var(--blue-text); }
 }
 
 /* skip link: lets keyboard users jump past the nav (WCAG 2.4.1) */
+.skip-link { min-height: 44px; display: inline-flex; align-items: center; }
 .skip-link {
   position: absolute; top: 0.5rem; left: 50%; z-index: 100;
   transform: translateX(-50%) translateY(-250%);
