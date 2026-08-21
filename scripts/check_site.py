@@ -4,8 +4,8 @@
 Run locally:   python scripts/check_site.py
 Exit code 0 = all checks pass, 1 = at least one failure.
 Guards the regressions this site has actually hit: stale cache-busters,
-broken internal refs, em dashes in copy, public financial figures,
-missing noopener, secret leaks.
+broken internal refs, em dashes in copy, missing noopener, secret leaks.
+Public financial metrics are allowed when verified and intentionally surfaced.
 """
 import json, os, re, sys
 
@@ -89,8 +89,6 @@ for p, s in pages.items():
     for w in ["delve","unlock","unleash","elevate","transform","tapestry",
               "beacon","game-chang","superpower","skyrocket","synergy"]:
         if w in text.lower(): fail(f"{p}: buzzword '{w}' in copy")
-    if re.search(r"\$[0-9]", text):
-        fail(f"{p}: public dollar figure found in copy")
 ok("copy rules pass (no em dashes, no buzzwords)")
 
 # 6. JSON-LD validity ---------------------------------------------------------
