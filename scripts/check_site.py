@@ -4,12 +4,13 @@
 Run locally:   python scripts/check_site.py
 Exit code 0 = all checks pass, 1 = at least one failure.
 Guards the regressions this site has actually hit: stale cache-busters,
-broken internal refs, em dashes in copy, missing noopener, secret leaks.
+broken internal refs, em dashes in copy, public financial figures,
+missing noopener, secret leaks.
 """
 import json, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PAGES = ["index.html", "case-studies.html", "404.html"]
+PAGES = ["index.html", "case-studies.html", "field-program.html", "404.html"]
 failures, notes = [], []
 
 def fail(msg): failures.append(msg)
@@ -82,10 +83,14 @@ elif resume_versions:
 
 # 5. House copy rules ---------------------------------------------------------
 for p, s in pages.items():
-    text = re.sub(r"<[^>]+>", " ", s)
+    text = re.sub(r"<(script|style)\b[^>]*>.*?</\1>", " ", s, flags=re.S | re.I)
+    text = re.sub(r"<[^>]+>", " ", text)
     if "\u2014" in text: fail(f"{p}: em dash found in copy (house rule: none)")
-    for w in ["delve","unleash","tapestry","game-chang","skyrocket","synergy"]:
+    for w in ["delve","unlock","unleash","elevate","transform","tapestry",
+              "beacon","game-chang","superpower","skyrocket","synergy"]:
         if w in text.lower(): fail(f"{p}: buzzword '{w}' in copy")
+    if re.search(r"\$[0-9]", text):
+        fail(f"{p}: public dollar figure found in copy")
 ok("copy rules pass (no em dashes, no buzzwords)")
 
 # 6. JSON-LD validity ---------------------------------------------------------
