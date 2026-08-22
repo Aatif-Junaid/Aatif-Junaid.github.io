@@ -92,11 +92,29 @@ for p, s in pages.items():
 ok("copy rules pass (no em dashes, no buzzwords)")
 
 # 6. JSON-LD validity ---------------------------------------------------------
+datetime_pattern = re.compile(
+    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$"
+)
+
+def check_structured_dates(value, page):
+    if isinstance(value, dict):
+        for key, child in value.items():
+            if key in {"dateCreated", "datePublished", "dateModified"}:
+                if not isinstance(child, str) or not datetime_pattern.fullmatch(child):
+                    fail(f"{page}: {key} must be an ISO 8601 datetime with timezone")
+            else:
+                check_structured_dates(child, page)
+    elif isinstance(value, list):
+        for child in value:
+            check_structured_dates(child, page)
+
 for p, s in pages.items():
     for block in re.findall(r'<script type="application/ld\+json">(.*?)</script>', s, re.S):
-        try: json.loads(block)
+        try:
+            data = json.loads(block)
+            check_structured_dates(data, p)
         except Exception as e: fail(f"{p}: invalid JSON-LD ({e})")
-ok("JSON-LD parses")
+ok("JSON-LD parses and structured dates use ISO 8601 datetimes")
 
 # 7. Secret hygiene -----------------------------------------------------------
 SECRETS = [
